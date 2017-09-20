@@ -23,7 +23,7 @@ public class Assignment1_1 {
             printLine(n, middle);
             list.add(middle);
             middle -= 4;
-        } while (middle >= n / 2);
+        } while (middle >= (float)n / 2f);
         for (int i = middle + 8; i < n; i += 4) {
             printLine(n, i);
             list.add(i);
