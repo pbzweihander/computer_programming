@@ -9,7 +9,7 @@ public class Assignment1_2 {
         float minute = getMinute(hhmmss);
         int second = getSecond(hhmmss);
 
-        float hour_degree = convert24ToDegrees(hour);
+        float hour_degree = convert12ToDegrees(hour);
         float minute_degree = convert60ToDegrees(minute);
         float second_degree = convert60ToDegrees(second);
 
@@ -18,9 +18,19 @@ public class Assignment1_2 {
         float second_hour = angleBetween(second_degree, hour_degree);
 
         System.out.println("<Result>");
-        System.out.println("Hour-minute: " + fmt(hour_minute) + " degrees");
-        System.out.println("Minute-second: " + fmt(minute_second) + " degrees");
-        System.out.println("Second-hour: " + fmt(second_hour) + " degrees");
+
+        for (int i = 0; i < 3; i++) {
+            if (hour_minute == max(hour_minute, minute_second, second_hour)) {
+                System.out.println("Hour-minute: " + fmt(hour_minute) + " degrees");
+                hour_minute = -1f;
+            } else if (minute_second == max(hour_minute, minute_second, second_hour)) {
+                System.out.println("Minute-second: " + fmt(minute_second) + " degrees");
+                minute_second = -1f;
+            } else {
+                System.out.println("Second-hour: " + fmt(second_hour) + " degrees");
+                second_hour = -1f;
+            }
+        }
     }
 
     private static String fmt(float f) {
@@ -56,7 +66,7 @@ public class Assignment1_2 {
         return Integer.parseInt(hhmmss.substring(4, 6));
     }
 
-    private static float convert24ToDegrees(float h) {
+    private static float convert12ToDegrees(float h) {
         return h / 12f * 360f;
     }
 
@@ -69,5 +79,12 @@ public class Assignment1_2 {
         if (diff > 180f)
             diff = 360f - diff;
         return diff;
+    }
+
+    private static float max(float a, float b, float c) {
+        if (a >= b && a >= c) return a;
+        if (b >= a && b >= c) return b;
+        if (c >= a && c >= b) return c;
+        return 0f;
     }
 }
