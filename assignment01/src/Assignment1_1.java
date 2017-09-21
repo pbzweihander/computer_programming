@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Assignment1_1 {
     public static void main(String[] args) {
-        int n = GetInt();
+        int n = getInt();
         int last = 0;
         int[] list = new int[n * 2];
         int count = 0;
@@ -42,7 +42,7 @@ public class Assignment1_1 {
         }
     }
 
-    private static int GetInt() {
+    private static int getInt() {
         Scanner scan = new Scanner(System.in);
         System.out.print("Input:");
         return scan.nextInt();
