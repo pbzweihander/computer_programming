@@ -1,44 +1,44 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Assignment1_1 {
     public static void main(String[] args) {
         int n = GetInt();
         int last = 0;
-        ArrayList<Integer> list = new ArrayList<>();
+        int[] list = new int[n * 2];
+        int count = 0;
 
         System.out.println("(i)");
         for (int i = 2 - (n % 2); i < n; i += 4) {
             printLine(n, i);
-            list.add(i);
+            list[count++] = i;
             last = i;
         }
         printLine(n, n);
-        list.add(n);
+        list[count++] = n;
 
         int middle = last;
         do {
             if (middle < 1)
                 middle = 2 - (n % 2);
             printLine(n, middle);
-            list.add(middle);
+            list[count++] = middle;
             middle -= 4;
         } while (middle >= (float)n / 2f);
         for (int i = middle + 8; i < n; i += 4) {
             printLine(n, i);
-            list.add(i);
+            list[count++] = i;
         }
         printLine(n, n);
-        list.add(n);
+        list[count++] = n;
 
         for (int i = last; i >= 1; i -= 4) {
             printLine(n, i);
-            list.add(i);
+            list[count++] = i;
         }
 
         System.out.println("(ii)");
-        for (int i: list) {
-            printBlankLine(n, i);
+        for (int i = 0; i < count; i++) {
+            printBlankLine(n, list[i]);
         }
     }
 
