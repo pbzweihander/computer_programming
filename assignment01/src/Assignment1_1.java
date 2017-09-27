@@ -4,7 +4,7 @@ public class Assignment1_1 {
     public static void main(String[] args) {
         int n = getInt();
         int last = 0;
-        int[] list = new int[n * 2];
+        int[] list = new int[n * 2 + 1];
         int count = 0;
 
         System.out.println("(i)");
