@@ -29,3 +29,5 @@ fabric.properties
 
 input*
 output*
+
+*.iml
