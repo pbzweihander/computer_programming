@@ -19,7 +19,7 @@ public class Assignment3_Cube {
         }
     }
 
-    public int[][] get(int s) {
-        return side[s - 1].get();
+    public int[][] report(int s) {
+        return side[s - 1].report();
     }
 }

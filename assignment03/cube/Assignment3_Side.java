@@ -8,7 +8,7 @@ public class Assignment3_Side {
                 side[i][j] = value;
     }
 
-    public int[][] get() {
+    public int[][] report() {
         return side;
     }
 }
