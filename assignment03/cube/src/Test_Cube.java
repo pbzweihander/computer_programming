@@ -1,6 +1,6 @@
 public class Test_Cube {
     public static void main(String[] args) {
-        Assignment3_Cube cube1 = new Assignment3_Cube("cube_input2.txt");
+        Assignment3_Cube cube1 = new Assignment3_Cube("cube_input1.txt");
         for (int i = 1; i <= 6; i++) {
             System.out.println(i);
             int[][] t = cube1.report(i);
