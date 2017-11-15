@@ -1,8 +1,8 @@
 public class Animal {
-    char type;
-    String speciesName;
-    String name;
-    int agr;
+    protected char type;
+    protected String speciesName;
+    protected String name;
+    protected int agr;
 
     public Animal(char type, String speciesName, String name, int agr) {
         this.type = type;
@@ -21,5 +21,9 @@ public class Animal {
 
     public char getType() {
         return type;
+    }
+
+    public int getAggresionLevel() {
+        return agr;
     }
 }

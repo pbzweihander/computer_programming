@@ -1,7 +1,7 @@
 .SUFFIXES: .java .class
 JAVAC = javac
 JAVA = java
-JFLAGS =
+JFLAGS = -Xlint
 OUTPUT_DIR = out
 SOURCE_DIR = src
 VPATH = $(SOURCE_DIR):$(OUTPUT_DIR)

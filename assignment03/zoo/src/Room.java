@@ -4,6 +4,11 @@ public class Room {
     private Vector<Animal> animals;
     private Vector<Boolean> foods;
 
+    public Room() {
+        animals = new Vector<>();
+        foods = new Vector<>();
+    }
+
     public void addAnimal(Animal ani) {
         animals.add(ani);
     }

@@ -6,7 +6,7 @@ import java.util.Vector;
  */
 public class ManageInfo {
 
-    Vector<Room> rooms;
+    private Vector<Room> rooms;
 
     public ManageInfo() {
         rooms = new Vector<>();
