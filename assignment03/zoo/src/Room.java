@@ -19,4 +19,12 @@ public class Room {
     public boolean getFood(int index) {
         return foods.elementAt(index);
     }
+
+    public int getAnimalsSize() {
+        return animals.size();
+    }
+
+    public int getFoodsSize() {
+        return foods.size();
+    }
 }
