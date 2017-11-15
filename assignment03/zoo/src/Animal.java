@@ -4,11 +4,18 @@ public class Animal {
     String name;
     int agr;
 
-    public String getSpeciesName(){
+    public Animal(char type, String speciesName, String name, int agr) {
+        this.type = type;
+        this.speciesName = speciesName;
+        this.name = name;
+        this.agr = agr;
+    }
+
+    public String getSpeciesName() {
         return speciesName;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 

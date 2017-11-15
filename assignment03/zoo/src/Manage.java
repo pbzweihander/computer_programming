@@ -1,11 +1,19 @@
-/**
- * Created by Jeong Wonil on 2017-11-06.
- */
 public class Manage {
-    //you can add more
-    public Report report(){
-        //your final report result must be returned by this method.
-        //you should edit this method without changing function parameters and name
+    private ManageInfo info;
+
+    public Manage() {
+        info = new ManageInfo();
+    }
+
+    public Manage(ManageInfo info) {
+        this.info = info;
+    }
+
+    public void set(ManageInfo info) {
+        this.info = info;
+    }
+
+    public Report report() {
         return null;
     }
 }
