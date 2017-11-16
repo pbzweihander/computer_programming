@@ -1,0 +1,6 @@
+javac -Xlint -cp out -d out src/Lab09Tree.java
+javac -Xlint -cp out -d out src/Lab09Tester.java
+java -cp out Lab09Tester
+preorder   : 10 5 2 7 8 15 13 11 20
+print sideways
+
