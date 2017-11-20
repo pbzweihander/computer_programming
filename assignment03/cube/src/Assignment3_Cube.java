@@ -137,9 +137,9 @@ public class Assignment3_Cube {
 
     public void rotateCol(int side, int direction, int location) {
         if (side == 4)
-            rotateRow(1, direction, location);
+            rotateRow(1, -direction, location);
         else if (side == 5)
-            rotateRow(1, -direction, size - location - 1);
+            rotateRow(1, direction, size - location - 1);
         else {
             // +d: _+Cl -> _+Cl
             int[][] arrs = { sides[0].getCol(location), sides[3].getCol(location), sides[2].getCol(location),
