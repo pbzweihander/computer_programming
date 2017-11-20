@@ -1,6 +1,6 @@
 public class Omnivore extends Animal {
-    public Omnivore(String speciesName, String name, int agr) {
-        super('O', speciesName, name, agr);
+    public Omnivore(char type, String speciesName, String name, int agr) {
+        super(type, speciesName, name, agr);
     }
 
     @Override

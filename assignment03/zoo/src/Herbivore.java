@@ -1,6 +1,6 @@
 public class Herbivore extends Animal {
-    public Herbivore(String speciesName, String name, int agr) {
-        super('H', speciesName, name, agr);
+    public Herbivore(char type, String speciesName, String name, int agr) {
+        super(type, speciesName, name, agr);
     }
 
     @Override
