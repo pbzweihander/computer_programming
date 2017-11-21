@@ -44,8 +44,7 @@ public class Tester4_1 {
 
     public static String preorderLetter(Node4_1 n) {
         String s = "";
-        if (n.label == '0')
-            s += n.character;
+        s += n.character;
         if (n.left != null)
             s += preorderLetter(n.left);
         if (n.right != null)
@@ -57,8 +56,7 @@ public class Tester4_1 {
         String s = "";
         if (n.left != null)
             s += inorderLetter(n.left);
-        if (n.label == '0')
-            s += n.character;
+        s += n.character;
         if (n.right != null)
             s += inorderLetter(n.right);
         return s;
@@ -70,8 +68,7 @@ public class Tester4_1 {
             s += postorderLetter(n.left);
         if (n.right != null)
             s += postorderLetter(n.right);
-        if (n.label == '0')
-            s += n.character;
+        s += n.character;
         return s;
     }
 
