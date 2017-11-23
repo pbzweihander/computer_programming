@@ -20,18 +20,18 @@ public class Assignment4_2 {
     }
 
     public String report_bits_preorder() {
-
+        return "";
     }
 
     public String report_bits_levelorder() {
-
+        return "";
     }
 
     public String report_preorder() {
-
+        return "";
     }
 
     public String report_levelorder() {
-
+        return "";
     }
 }
