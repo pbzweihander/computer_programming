@@ -20,7 +20,12 @@ public class Assignment4_2 {
     }
 
     public String report_bits_preorder() {
-        return "";
+        return reportBitsPreorder(root);
+    }
+
+    private String reportBitsPreorder(Node4_1 node) {
+        return reportBits(node) + (node.left != null ? reportBitsPreorder(node.left) : "")
+                + (node.right != null ? reportBitsPreorder(node.right) : "");
     }
 
     public String report_bits_levelorder() {
@@ -28,10 +33,19 @@ public class Assignment4_2 {
     }
 
     public String report_preorder() {
-        return "";
+        return reportPreorder(root);
+    }
+
+    private String reportPreorder(Node4_1 node) {
+        return node.label + (node.left != null ? reportPreorder(node.left) : "")
+                + (node.right != null ? reportPreorder(node.right) : "");
     }
 
     public String report_levelorder() {
         return "";
+    }
+
+    private String reportBits(Node4_1 node) {
+        return (node.left != null ? '1' : '0') + (node.right != null ? '1' : '0');
     }
 }
