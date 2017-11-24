@@ -1,6 +1,6 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.lang.IllegalStateException;
+import java.lang.UnsupportedOperationException;
 
 public class LinkedListIterator<T> implements Iterator<T> {
     private LinkedList<T> list;
@@ -31,10 +31,7 @@ public class LinkedListIterator<T> implements Iterator<T> {
         }
     }
 
-    public void remove() throws IllegalStateException {
-        if (cursor instanceof EmptyNode)
-            throw new IllegalStateException();
-        else
-            list.remove(cursor);
+    public void remove() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 }

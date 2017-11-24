@@ -22,14 +22,6 @@ public class LinkedList<T> implements Iterable<T> {
         return root == null;
     }
 
-    public void remove(T c) {
-        // TODO: remove of T
-    }
-
-    public void remove(LinkedListNode<T> node) {
-        // TODO: remove of Node
-    }
-
     public LinkedListIterator<T> iterator() {
         return null; //TODO: iterator
     }
