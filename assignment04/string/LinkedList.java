@@ -23,6 +23,6 @@ public class LinkedList<T> implements Iterable<T> {
     }
 
     public LinkedListIterator<T> iterator() {
-        return null; //TODO: iterator
+        return new LinkedListIterator<T>(this, root);
     }
 }
