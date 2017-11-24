@@ -1,4 +1,29 @@
 public class LinkedString implements LinkedStringInterface {
+    private class LinkedList<T> {
+        private class Node<T> {
+            public T value;
+            public Node<T> next;
+
+            public Node(T value) {
+                this.value = value;
+                next = null;
+            }
+        }
+
+        Node<T> root;
+
+        public LinkedList() {
+            root = null;
+        }
+
+        public void attach(T element) {
+            Node<T> node = root;
+            while (node.next != null)
+                node = node.next;
+            node.next = new Node<>(element);
+        }
+    }
+
     public void remove(String substr) {
         // TODO: remove of String
     }
