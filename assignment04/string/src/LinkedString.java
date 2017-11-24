@@ -17,10 +17,27 @@ public class LinkedString implements LinkedStringInterface {
         }
 
         public void attach(T element) {
-            Node<T> node = root;
-            while (node.next != null)
-                node = node.next;
-            node.next = new Node<>(element);
+            if (root == null)
+                root = new Node<>(element);
+            else {
+                Node<T> node = root;
+                while (node.next != null)
+                    node = node.next;
+                node.next = new Node<>(element);
+            }
+        }
+    }
+
+    private LinkedList<Character> char_array;
+
+    public LinkedString() {
+        char_array = new LinkedList<>();
+    }
+
+    public LinkedString(String str) {
+        char_array = new LinkedList<>();
+        for (char c : str.toCharArray()) {
+            char_array.attach(c);
         }
     }
 
