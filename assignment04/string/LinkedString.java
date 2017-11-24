@@ -1,23 +1,21 @@
 import java.lang.Iterable;
 
-public class LinkedString implements LinkedStringInterface, Iterable<Character> {
-    private LinkedList<Character> char_array;
-
+public class LinkedString extends LinkedList<Character> implements LinkedStringInterface, Iterable<Character> {
     public LinkedString() {
-        char_array = new LinkedList<>();
+        super();
     }
 
     public LinkedString(String str) {
-        char_array = new LinkedList<>();
+        super();
         for (char c : str.toCharArray()) {
-            char_array.attach(c);
+            attach(c);
         }
     }
 
     public LinkedString(LinkedString str) {
-        char_array = new LinkedList<>();
+        super();
         for (char c : str) {
-            char_array.attach(c);
+            attach(c);
         }
     }
 
@@ -75,9 +73,5 @@ public class LinkedString implements LinkedStringInterface, Iterable<Character> 
 
     public LinkedStringInterface concat(String str) {
         return null; // TODO: concat of String
-    }
-
-    public LinkedListIterator<Character> iterator() {
-        return char_array.iterator();
     }
 }

@@ -1,7 +1,7 @@
 import java.lang.Iterable;
 
 public class LinkedList<T> implements Iterable<T> {
-    private LinkedListNode<T> root;
+    protected LinkedListNode<T> root;
 
     public LinkedList() {
         root = null;
