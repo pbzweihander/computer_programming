@@ -6,28 +6,22 @@ public class LinkedListIterator<T> implements Iterator<T> {
     private LinkedList<T> list;
     private LinkedListNode<T> cursor;
 
-    private class EmptyNode<T> extends LinkedListNode<T> {
-        public EmptyNode(LinkedListNode<T> next) {
-            super(null);
-            this.next = next;
-        }
-    }
-
     public LinkedListIterator(LinkedList<T> list, LinkedListNode<T> root) {
         this.list = list;
-        cursor = new EmptyNode<T>(root);
+        cursor = root;
     }
 
     public boolean hasNext() {
-        return cursor.next != null;
+        return cursor != null;
     }
 
     public T next() throws NoSuchElementException {
-        if (cursor.next == null)
+        if (!hasNext())
             throw new NoSuchElementException();
         else {
+            LinkedListNode<T> node = cursor;
             cursor = cursor.next;
-            return cursor.value;
+            return node.value;
         }
     }
 
