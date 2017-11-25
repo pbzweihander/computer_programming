@@ -57,7 +57,7 @@ public class LinkedList<T> implements Iterable<T>, Cloneable {
             if (element instanceof Cloneable) {
                 try {
                     new_list.attach((T) element.getClass().getMethod("Clone").invoke(element));
-                } catch(Exception e) {
+                } catch (Exception e) {
                     throw new CloneNotSupportedException(e.getMessage());
                 }
             } else {
