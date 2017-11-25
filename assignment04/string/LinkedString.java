@@ -28,7 +28,11 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
     }
 
     public String toString() {
-        return ""; // TODO: toString
+        return toStringRec(root);
+    }
+
+    private String toStringRec(LinkedListNode<Character> node) {
+        return "" + node.value + (node.next != null ? toStringRec(node.next) : "");
     }
 
     public char charAt(int index) {
