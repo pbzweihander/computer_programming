@@ -1,11 +1,15 @@
 import java.lang.Iterable;
 import java.lang.IndexOutOfBoundsException;
 
-public class LinkedList<T> implements Iterable<T> {
+public class LinkedList<T> implements Iterable<T>, Cloneable {
     protected LinkedListNode<T> root;
 
     public LinkedList() {
         root = null;
+    }
+
+    protected LinkedList(LinkedListNode<T> root) {
+        this.root = root;
     }
 
     public void attach(T element) {
@@ -45,5 +49,21 @@ public class LinkedList<T> implements Iterable<T> {
             i++;
         }
         return i;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        LinkedList<T> new_list = (LinkedList<T>) super.clone();
+        for (T element : this) {
+            if (element instanceof Cloneable) {
+                try {
+                    new_list.attach((T) element.getClass().getMethod("Clone").invoke(element));
+                } catch(Exception e) {
+                    throw new CloneNotSupportedException(e.getMessage());
+                }
+            } else {
+                new_list.attach(element);
+            }
+        }
+        return new_list;
     }
 }
