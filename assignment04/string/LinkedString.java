@@ -1,4 +1,6 @@
 import java.lang.Iterable;
+import java.lang.IndexOutOfBoundsException;
+import java.lang.StringIndexOutOfBoundsException;
 
 public class LinkedString extends LinkedList<Character> implements LinkedStringInterface, Iterable<Character> {
     public LinkedString() {
@@ -50,11 +52,11 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
     }
 
     public char charAt(int index) {
-        return '\0'; // TODO: charAt
-    }
-
-    public int length() {
-        return 0; // TODO: length
+        try {
+            return nth(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+        }
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
