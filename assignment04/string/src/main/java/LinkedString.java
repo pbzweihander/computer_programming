@@ -101,4 +101,18 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
     public LinkedStringInterface concat(String str) {
         return null; // TODO: concat of String
     }
+
+    public LinkedString toLowerCase() {
+        LinkedString new_string = new LinkedString();
+        for (char c : this)
+            new_string.attach(Character.toLowerCase(c));
+        return new_string;
+    }
+
+    public LinkedString toUpperCase() {
+        LinkedString new_string = new LinkedString();
+        for (char c : this)
+            new_string.attach(Character.toUpperCase(c));
+        return new_string;
+    }
 }
