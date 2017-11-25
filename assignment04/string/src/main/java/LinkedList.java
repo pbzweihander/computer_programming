@@ -66,4 +66,12 @@ public class LinkedList<T> implements Iterable<T>, Cloneable {
         }
         return new_list;
     }
+
+    public LinkedList<T> subSequence(int startIndex, int endIndex) throws IndexOutOfBoundsException {
+        LinkedList<T> new_list = new LinkedList<>();
+        for (int i = startIndex; i <= endIndex; i++) {
+            new_list.attach(nth(i));
+        }
+        return new_list;
+    }
 }

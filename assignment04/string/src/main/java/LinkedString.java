@@ -21,6 +21,13 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
         }
     }
 
+    public LinkedString(LinkedList<Character> str) {
+        super();
+        for (char c : str) {
+            attach(c);
+        }
+    }
+
     public LinkedString(char[] str) {
         super();
         for (char c : str) {
@@ -30,8 +37,8 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
 
     public LinkedString(byte[] str) {
         super();
-        for (byte b: str) {
-            attach((char)b);
+        for (byte b : str) {
+            attach((char) b);
         }
     }
 
@@ -60,7 +67,7 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
-        return null; // TODO: substring
+        return new LinkedString(subSequence(startIndex, endIndex));
     }
 
     public boolean contains(LinkedStringInterface substr) {
