@@ -90,7 +90,10 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public String toString() {
-        return toStringRec(root);
+        if (isEmpty())
+            return "";
+        else
+            return toStringRec(root);
     }
 
     private String toStringRec(CharacterNode node) {
@@ -108,7 +111,25 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
-        return null; // TODO: substring
+        LinkedString new_str = new LinkedString();
+        if (isEmpty())
+            return new_str;
+        CharacterNode node = root;
+        int i = 0;
+        while (i++ < startIndex) {
+            if (node == null)
+                throw new StringIndexOutOfBoundsException(
+                        "begin " + startIndex + ", end " + endIndex + ", length " + length());
+            node = node.next;
+        }
+        while (i++ <= endIndex) {
+            if (node == null)
+                throw new StringIndexOutOfBoundsException(
+                        "begin " + startIndex + ", end " + endIndex + ", length " + length());
+            new_str.push(node.value);
+            node = node.next;
+        }
+        return new_str;
     }
 
     public boolean contains(LinkedStringInterface substr) {
