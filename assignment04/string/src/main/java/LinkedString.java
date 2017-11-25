@@ -1,4 +1,5 @@
 import java.lang.StringIndexOutOfBoundsException;
+import java.lang.IndexOutOfBoundsException;
 
 public class LinkedString implements LinkedStringInterface {
     private class CharacterNode {
@@ -8,6 +9,19 @@ public class LinkedString implements LinkedStringInterface {
         public CharacterNode(char value) {
             this.value = value;
             next = null;
+        }
+
+        public LinkedString take(int length) {
+            int i = 0;
+            CharacterNode node = this;
+            LinkedString arr = new LinkedString();
+            while (i++ < length) {
+                if (node == null)
+                    throw new IndexOutOfBoundsException();
+                arr.push(node.value);
+                node = node.next;
+            }
+            return arr;
         }
     }
 
@@ -100,20 +114,27 @@ public class LinkedString implements LinkedStringInterface {
         return "" + node.value + (node.next != null ? toStringRec(node.next) : "");
     }
 
-    public char charAt(int index) {
+    private CharacterNode nodeAt(int index) {
         CharacterNode node = root;
         while (index-- > 0) {
             node = node.next;
             if (node == null)
-                throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+                throw new IndexOutOfBoundsException("Index out of range: " + index);
         }
-        return node.value;
+        return node;
+    }
+
+    public char charAt(int index) {
+        try {
+            return nodeAt(index).value;
+        } catch (IndexOutOfBoundsException e) {
+            throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+        }
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
-        LinkedString new_str = new LinkedString();
         if (isEmpty())
-            return new_str;
+            return new LinkedString();
         CharacterNode node = root;
         int i = 0;
         while (i++ < startIndex) {
@@ -122,22 +143,80 @@ public class LinkedString implements LinkedStringInterface {
                         "begin " + startIndex + ", end " + endIndex + ", length " + length());
             node = node.next;
         }
-        while (i++ <= endIndex) {
-            if (node == null)
-                throw new StringIndexOutOfBoundsException(
-                        "begin " + startIndex + ", end " + endIndex + ", length " + length());
-            new_str.push(node.value);
-            node = node.next;
+        try {
+            return node.take(endIndex - startIndex);
+        } catch (IndexOutOfBoundsException e) {
+            throw new StringIndexOutOfBoundsException(
+                    "begin " + startIndex + ", end " + endIndex + ", length " + length());
         }
-        return new_str;
     }
 
     public boolean contains(LinkedStringInterface substr) {
-        return false; // TODO: contains of LinkedString
+        LinkedString pattern = (LinkedString) substr;
+        if (pattern.isEmpty())
+            return true;
+        if (isEmpty())
+            return false;
+        int pattern_len = pattern.length();
+        if (pattern_len > length())
+            return false;
+        CharacterNode str_cursor = root;
+        CharacterNode pattern_cursor = pattern.root;
+        while (str_cursor != null) {
+            if (str_cursor.value == pattern_cursor.value) {
+                CharacterNode str_matching_node = str_cursor.next;
+                pattern_cursor = pattern_cursor.next;
+                int count = 1;
+                while (str_matching_node != null) {
+                    if (str_matching_node.value == pattern_cursor.value) {
+                        count++;
+                        if (count == pattern_len)
+                            return true;
+                        str_matching_node = str_matching_node.next;
+                        pattern_cursor = pattern_cursor.next;
+                    } else
+                        break;
+                }
+                str_cursor = str_cursor.next;
+                pattern_cursor = pattern.root;
+            } else
+                str_cursor = str_cursor.next;
+        }
+        return false;
     }
 
     public boolean contains(String substr) {
-        return false; // TODO: conatains of String
+        if (substr.isEmpty())
+            return true;
+        if (isEmpty())
+            return false;
+        char[] pattern = substr.toCharArray();
+        int pattern_len = pattern.length;
+        if (pattern_len > length())
+            return false;
+        CharacterNode str_cursor = root;
+        int pattern_cursor = 0;
+        while (str_cursor != null) {
+            if (str_cursor.value == pattern[pattern_cursor]) {
+                CharacterNode str_matching_node = str_cursor.next;
+                pattern_cursor++;
+                int count = 1;
+                while (str_matching_node != null) {
+                    if (str_matching_node.value == pattern[pattern_cursor]) {
+                        count++;
+                        if (count == pattern_len)
+                            return true;
+                        str_matching_node = str_matching_node.next;
+                        pattern_cursor++;
+                    } else
+                        break;
+                }
+                str_cursor = str_cursor.next;
+                pattern_cursor = 0;
+            } else
+                str_cursor = str_cursor.next;
+        }
+        return false;
     }
 
     public int compareTo(LinkedStringInterface str) {
