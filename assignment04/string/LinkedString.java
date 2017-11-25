@@ -19,6 +19,20 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
         }
     }
 
+    public LinkedString(char[] str) {
+        super();
+        for (char c : str) {
+            attach(c);
+        }
+    }
+
+    public LinkedString(byte[] str) {
+        super();
+        for (byte b: str) {
+            attach((char)b);
+        }
+    }
+
     public void remove(String substr) {
         // TODO: remove of String
     }
