@@ -33,3 +33,5 @@ output*
 *.iml
 
 tests/
+
+.gradle/
