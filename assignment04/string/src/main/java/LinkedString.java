@@ -1,45 +1,84 @@
-import java.lang.Iterable;
-import java.lang.IndexOutOfBoundsException;
 import java.lang.StringIndexOutOfBoundsException;
 
-public class LinkedString extends LinkedList<Character> implements LinkedStringInterface, Iterable<Character> {
+public class LinkedString implements LinkedStringInterface {
+    private class CharacterNode {
+        public char value;
+        public CharacterNode next;
+
+        public CharacterNode(char value) {
+            this.value = value;
+            next = null;
+        }
+    }
+
+    private CharacterNode root;
+
     public LinkedString() {
-        super();
+        root = null;
     }
 
     public LinkedString(String str) {
-        super();
+        root = null;
         for (char c : str.toCharArray()) {
-            attach(c);
+            push(c);
         }
     }
 
     public LinkedString(LinkedString str) {
-        super();
-        for (char c : str) {
-            attach(c);
-        }
-    }
-
-    public LinkedString(LinkedList<Character> str) {
-        super();
-        for (char c : str) {
-            attach(c);
+        root = null;
+        for (char c : str.toCharArray()) {
+            push(c);
         }
     }
 
     public LinkedString(char[] str) {
-        super();
+        root = null;
         for (char c : str) {
-            attach(c);
+            push(c);
         }
     }
 
     public LinkedString(byte[] str) {
-        super();
+        root = null;
         for (byte b : str) {
-            attach((char) b);
+            push((char) b);
         }
+    }
+
+    public void push(char element) {
+        if (root == null)
+            root = new CharacterNode(element);
+        else {
+            CharacterNode node = root;
+            while (node.next != null)
+                node = node.next;
+            node.next = new CharacterNode(element);
+        }
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public char[] toCharArray() {
+        char[] arr = new char[length()];
+        int i = 0;
+        CharacterNode node = root;
+        while (node != null) {
+            arr[i++] = node.value;
+            node = node.next;
+        }
+        return arr;
+    }
+
+    public int length() {
+        CharacterNode node = root;
+        int i = 0;
+        while (node != null) {
+            node = node.next;
+            i++;
+        }
+        return i;
     }
 
     public void remove(String substr) {
@@ -54,20 +93,22 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
         return toStringRec(root);
     }
 
-    private String toStringRec(LinkedListNode<Character> node) {
+    private String toStringRec(CharacterNode node) {
         return "" + node.value + (node.next != null ? toStringRec(node.next) : "");
     }
 
     public char charAt(int index) {
-        try {
-            return nth(index);
-        } catch (IndexOutOfBoundsException e) {
-            throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+        CharacterNode node = root;
+        while (index-- > 0) {
+            node = node.next;
+            if (node == null)
+                throw new StringIndexOutOfBoundsException("String index out of range: " + index);
         }
+        return node.value;
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
-        return new LinkedString(subSequence(startIndex, endIndex));
+        return null; // TODO: substring
     }
 
     public boolean contains(LinkedStringInterface substr) {
@@ -104,15 +145,15 @@ public class LinkedString extends LinkedList<Character> implements LinkedStringI
 
     public LinkedString toLowerCase() {
         LinkedString new_string = new LinkedString();
-        for (char c : this)
-            new_string.attach(Character.toLowerCase(c));
+        for (char c : this.toCharArray())
+            new_string.push(Character.toLowerCase(c));
         return new_string;
     }
 
     public LinkedString toUpperCase() {
         LinkedString new_string = new LinkedString();
-        for (char c : this)
-            new_string.attach(Character.toUpperCase(c));
+        for (char c : this.toCharArray())
+            new_string.push(Character.toUpperCase(c));
         return new_string;
     }
 }
