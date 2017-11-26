@@ -26,13 +26,16 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     private CharacterNode root;
+    private CharacterNode tail;
 
     public LinkedString() {
         root = null;
+        tail = null;
     }
 
     public LinkedString(String str) {
         root = null;
+        tail = null;
         for (char c : str.toCharArray()) {
             push(c);
         }
@@ -40,6 +43,7 @@ public class LinkedString implements LinkedStringInterface {
 
     public LinkedString(LinkedString str) {
         root = null;
+        tail = null;
         for (char c : str.toCharArray()) {
             push(c);
         }
@@ -47,6 +51,7 @@ public class LinkedString implements LinkedStringInterface {
 
     public LinkedString(char[] str) {
         root = null;
+        tail = null;
         for (char c : str) {
             push(c);
         }
@@ -54,20 +59,25 @@ public class LinkedString implements LinkedStringInterface {
 
     public LinkedString(byte[] str) {
         root = null;
+        tail = null;
         for (byte b : str) {
             push((char) b);
         }
     }
 
     public void push(char element) {
-        if (root == null)
+        if (root == null) {
             root = new CharacterNode(element);
-        else {
-            CharacterNode node = root;
-            while (node.next != null)
-                node = node.next;
-            node.next = new CharacterNode(element);
+            tail = root;
+        } else {
+            tail.next = new CharacterNode(element);
+            tail = tail.next;
         }
+    }
+
+    public void append(LinkedString str) {
+        tail.next = str.root;
+        tail = str.tail;
     }
 
     public boolean isEmpty() {
@@ -236,11 +246,17 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public LinkedStringInterface concat(LinkedStringInterface str) {
-        return null; // TODO: concat of LinkedString
+        LinkedString new_str = new LinkedString(this);
+        new_str.append((LinkedString) str);
+        return new_str;
     }
 
     public LinkedStringInterface concat(String str) {
-        return null; // TODO: concat of String
+        LinkedString new_str = new LinkedString(this);
+        for (char c : str.toCharArray()) {
+            new_str.push(c);
+        }
+        return new_str;
     }
 
     public LinkedString toLowerCase() {
