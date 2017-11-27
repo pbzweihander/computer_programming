@@ -178,20 +178,25 @@ public class LinkedString implements LinkedStringInterface {
     public String toString() {
         if (isEmpty())
             return "";
-        else
-            return toStringRec(root);
-    }
-
-    private String toStringRec(CharacterNode node) {
-        return "" + node.value + (node.next != null ? toStringRec(node.next) : "");
+        StringBuilder builder = new StringBuilder();
+        CharacterNode node = root;
+        while (node != null) {
+            builder.append(node.value);
+            node = node.next;
+        }
+        return builder.toString();
     }
 
     private CharacterNode nodeAt(int index) {
         CharacterNode node = root;
         while (index-- > 0) {
             node = node.next;
-            if (node == null)
-                throw new IndexOutOfBoundsException("Index out of range: " + index);
+            if (node == null) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("Index out of range: ");
+                builder.append(index);
+                throw new IndexOutOfBoundsException(builder.toString());
+            }
         }
         return node;
     }
@@ -200,8 +205,22 @@ public class LinkedString implements LinkedStringInterface {
         try {
             return nodeAt(index).value;
         } catch (IndexOutOfBoundsException e) {
-            throw new StringIndexOutOfBoundsException("String index out of range: " + index);
+            StringBuilder builder = new StringBuilder();
+            builder.append("String index out of range: ");
+            builder.append(index);
+            throw new StringIndexOutOfBoundsException(builder.toString());
         }
+    }
+
+    private String makeSubstringExceptionMessage(int startIndex, int endIndex) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("begin ");
+        builder.append(startIndex);
+        builder.append(", end ");
+        builder.append(endIndex);
+        builder.append(", length ");
+        builder.append(length());
+        return builder.toString();
     }
 
     public LinkedStringInterface substring(int startIndex, int endIndex) {
@@ -211,15 +230,13 @@ public class LinkedString implements LinkedStringInterface {
         int i = 0;
         while (i++ < startIndex) {
             if (node == null)
-                throw new StringIndexOutOfBoundsException(
-                        "begin " + startIndex + ", end " + endIndex + ", length " + length());
+                throw new StringIndexOutOfBoundsException(makeSubstringExceptionMessage(startIndex, endIndex));
             node = node.next;
         }
         try {
             return node.take(endIndex - startIndex);
         } catch (IndexOutOfBoundsException e) {
-            throw new StringIndexOutOfBoundsException(
-                    "begin " + startIndex + ", end " + endIndex + ", length " + length());
+            throw new StringIndexOutOfBoundsException(makeSubstringExceptionMessage(startIndex, endIndex));
         }
     }
 
