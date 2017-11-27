@@ -49,6 +49,10 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
+    public LinkedString(LinkedStringInterface str) {
+        this(str.toString());
+    }
+
     public LinkedString(char[] str) {
         root = null;
         tail = null;
@@ -139,7 +143,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void remove(LinkedStringInterface substr) {
-        LinkedString pattern = (LinkedString) substr;
+        LinkedString pattern = new LinkedString(substr);
         int pattern_len = pattern.length();
         if (pattern.isEmpty() || isEmpty() || pattern_len > length())
             return;
@@ -220,7 +224,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public boolean contains(LinkedStringInterface substr) {
-        LinkedString pattern = (LinkedString) substr;
+        LinkedString pattern = new LinkedString(substr);
         if (pattern.isEmpty())
             return true;
         if (isEmpty())
@@ -305,7 +309,7 @@ public class LinkedString implements LinkedStringInterface {
 
     public LinkedStringInterface concat(LinkedStringInterface str) {
         LinkedString new_str = new LinkedString(this);
-        new_str.append((LinkedString) str);
+        new_str.append(new LinkedString(str));
         return new_str;
     }
 
