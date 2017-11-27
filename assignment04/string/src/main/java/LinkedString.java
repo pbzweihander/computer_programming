@@ -139,69 +139,38 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void remove(String substr) {
-        char[] pattern = substr.toCharArray();
-        int pattern_len = pattern.length;
-        if (substr.isEmpty() || isEmpty() || pattern_len > length())
+        int s_length = length();
+        if (substr.isEmpty() || isEmpty() || s_length < substr.length())
             return;
-        CharacterNode str_cursor = new CharacterNode('\0');
-        str_cursor.next = root;
-        int pattern_cursor = 0;
-        while (str_cursor.next != null) {
-            if (str_cursor.next.value == pattern[pattern_cursor]) {
-                CharacterNode str_matching_node = str_cursor.next.next;
-                pattern_cursor++;
-                int count = 1;
-                while (str_matching_node != null) {
-                    if (str_matching_node.value == pattern[pattern_cursor]) {
-                        count++;
-                        if (count == pattern_len) {
-                            str_cursor.next = str_matching_node.next;
-                            remove(substr);
-                            return;
-                        }
-                        str_matching_node = str_matching_node.next;
-                        pattern_cursor++;
-                    } else
-                        break;
+        char[] pattern = substr.toCharArray();
+        int[] pi = getPi(pattern);
+        CharacterNode node = new CharacterNode('\0');
+        node.next = root;
+        int i = 0;
+        while (node.next != null) {
+            if (node.next.value == pattern[i]) {
+                CharacterNode matching_node = node.next;
+                int j = i + 1;
+                while (matching_node.next.value == pattern[j]) {
+                    matching_node = matching_node.next;
+                    j++;
+                    if (j == pattern.length) {
+                        node.next = matching_node.next;
+                        remove(substr);
+                        return;
+                    }
+                    if (matching_node.next == null)
+                        return;
                 }
-                str_cursor = str_cursor.next;
-                pattern_cursor = 0;
+                i = pi[j - 1];
+                node = matching_node;
             } else
-                str_cursor = str_cursor.next;
+                node = node.next;
         }
     }
 
     public void remove(LinkedStringInterface substr) {
-        LinkedString pattern = new LinkedString(substr);
-        int pattern_len = pattern.length();
-        if (pattern.isEmpty() || isEmpty() || pattern_len > length())
-            return;
-        CharacterNode str_cursor = new CharacterNode('\0');
-        str_cursor.next = root;
-        CharacterNode pattern_cursor = pattern.root;
-        while (str_cursor.next != null) {
-            if (str_cursor.next.value == pattern_cursor.value) {
-                CharacterNode str_matching_node = str_cursor.next.next;
-                pattern_cursor = pattern_cursor.next;
-                int count = 1;
-                while (str_matching_node != null) {
-                    if (str_matching_node.value == pattern_cursor.value) {
-                        count++;
-                        if (count == pattern_len) {
-                            str_cursor.next = str_matching_node.next;
-                            remove(substr);
-                            return;
-                        }
-                        str_matching_node = str_matching_node.next;
-                        pattern_cursor = pattern_cursor.next;
-                    } else
-                        break;
-                }
-                str_cursor = str_cursor.next;
-                pattern_cursor = pattern.root;
-            } else
-                str_cursor = str_cursor.next;
-        }
+        remove(substr.toString());
     }
 
     public String toString() {
