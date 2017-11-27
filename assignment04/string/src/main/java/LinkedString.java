@@ -109,6 +109,25 @@ public class LinkedString implements LinkedStringInterface {
         return i;
     }
 
+    public static int[] getPi(char[] pattern) {
+        int[] pi = new int[pattern.length];
+        int i = 1, j = 0;
+        pi[0] = 0;
+        while (i < pattern.length) {
+            if (pattern[i] == pattern[j]) {
+                pi[i] = j + 1;
+                i++;
+                j++;
+            } else {
+                if (j > 0)
+                    j = pi[j - 1];
+                else
+                    i++;
+            }
+        }
+        return pi;
+    }
+
     public void remove(String substr) {
         char[] pattern = substr.toCharArray();
         int pattern_len = pattern.length;
@@ -241,37 +260,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public boolean contains(LinkedStringInterface substr) {
-        LinkedString pattern = new LinkedString(substr);
-        if (pattern.isEmpty())
-            return true;
-        if (isEmpty())
-            return false;
-        int pattern_len = pattern.length();
-        if (pattern_len > length())
-            return false;
-        CharacterNode str_cursor = root;
-        CharacterNode pattern_cursor = pattern.root;
-        while (str_cursor != null) {
-            if (str_cursor.value == pattern_cursor.value) {
-                CharacterNode str_matching_node = str_cursor.next;
-                pattern_cursor = pattern_cursor.next;
-                int count = 1;
-                while (str_matching_node != null) {
-                    if (str_matching_node.value == pattern_cursor.value) {
-                        count++;
-                        if (count == pattern_len)
-                            return true;
-                        str_matching_node = str_matching_node.next;
-                        pattern_cursor = pattern_cursor.next;
-                    } else
-                        break;
-                }
-                str_cursor = str_cursor.next;
-                pattern_cursor = pattern.root;
-            } else
-                str_cursor = str_cursor.next;
-        }
-        return false;
+        return contains(substr.toString());
     }
 
     public boolean contains(String substr) {
@@ -279,31 +268,29 @@ public class LinkedString implements LinkedStringInterface {
             return true;
         if (isEmpty())
             return false;
-        char[] pattern = substr.toCharArray();
-        int pattern_len = pattern.length;
-        if (pattern_len > length())
+        int s_length = length();
+        if (s_length < substr.length())
             return false;
-        CharacterNode str_cursor = root;
-        int pattern_cursor = 0;
-        while (str_cursor != null) {
-            if (str_cursor.value == pattern[pattern_cursor]) {
-                CharacterNode str_matching_node = str_cursor.next;
-                pattern_cursor++;
-                int count = 1;
-                while (str_matching_node != null) {
-                    if (str_matching_node.value == pattern[pattern_cursor]) {
-                        count++;
-                        if (count == pattern_len)
-                            return true;
-                        str_matching_node = str_matching_node.next;
-                        pattern_cursor++;
-                    } else
-                        break;
+        char[] pattern = substr.toCharArray();
+        int[] pi = getPi(pattern);
+        CharacterNode node = root;
+        int i = 0;
+        while (node != null) {
+            if (node.value == pattern[i]) {
+                CharacterNode matching_node = node.next;
+                int j = i + 1;
+                while (matching_node.value == pattern[j]) {
+                    matching_node = matching_node.next;
+                    j++;
+                    if (j == pattern.length)
+                        return true;
+                    if (matching_node == null)
+                        return false;
                 }
-                str_cursor = str_cursor.next;
-                pattern_cursor = 0;
+                i = pi[j - 1];
+                node = matching_node;
             } else
-                str_cursor = str_cursor.next;
+                node = node.next;
         }
         return false;
     }

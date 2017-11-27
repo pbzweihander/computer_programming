@@ -17,6 +17,18 @@ public class LinkedStringTest {
     }
 
     @Test
+    public void testGetPi() {
+        int[] actuals1 = LinkedString.getPi("abcdabca".toCharArray());
+        int[] actuals2 = LinkedString.getPi("aabaabaaa".toCharArray());
+        int[] actuals3 = LinkedString.getPi("abcaby".toCharArray());
+        int[] actuals4 = LinkedString.getPi("acacabacacabacacac".toCharArray());
+        assertArrayEquals(new int[] { 0, 0, 0, 0, 1, 2, 3, 1 }, actuals1);
+        assertArrayEquals(new int[] { 0, 1, 0, 1, 2, 3, 4, 5, 2 }, actuals2);
+        assertArrayEquals(new int[] { 0, 0, 0, 1, 2, 0 }, actuals3);
+        assertArrayEquals(new int[] { 0, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 4 }, actuals4);
+    }
+
+    @Test
     public void testSubstring() {
         LinkedString str = new LinkedString(lorem_ipsum);
         Random random = new Random();
@@ -55,6 +67,16 @@ public class LinkedStringTest {
         assertEquals(lorem_ipsum.contains(substr2), str.contains(substr2));
         assertEquals(lorem_ipsum.contains(substr), str.contains(new LinkedString(substr)));
         assertEquals(lorem_ipsum.contains(substr2), str.contains(new LinkedString(substr2)));
+
+        String random_str = randomString(lorem_ipsum.length());
+        LinkedString str2 = new LinkedString(random_str);
+        String substr3 = random_str.substring(random.nextInt(lorem_ipsum.length() / 2),
+                lorem_ipsum.length() / 2 + random.nextInt(lorem_ipsum.length() / 2 - 1));
+        String substr4 = randomString(substr3.length());
+        assertEquals(random_str.contains(substr3), str2.contains(substr3));
+        assertEquals(random_str.contains(substr4), str2.contains(substr4));
+        assertEquals(random_str.contains(substr3), str2.contains(new LinkedString(substr3)));
+        assertEquals(random_str.contains(substr4), str2.contains(new LinkedString(substr4)));
     }
 
     @Test
