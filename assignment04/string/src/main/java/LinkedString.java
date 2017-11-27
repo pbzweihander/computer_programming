@@ -2,7 +2,7 @@ import java.lang.StringIndexOutOfBoundsException;
 import java.lang.IndexOutOfBoundsException;
 
 public class LinkedString implements LinkedStringInterface {
-    private class CharacterNode {
+    protected class CharacterNode {
         public char value;
         public CharacterNode next;
 
@@ -25,8 +25,8 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
-    private CharacterNode root;
-    private CharacterNode tail;
+    protected CharacterNode root;
+    protected CharacterNode tail;
 
     public LinkedString() {
         root = null;
@@ -80,8 +80,18 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void append(LinkedString str) {
-        tail.next = str.root;
-        tail = str.tail;
+        if (root == null) {
+            root = str.root;
+            tail = str.tail;
+        } else {
+            tail.next = str.root;
+            tail = str.tail;
+        }
+    }
+
+    public void append(String str) {
+        for (char c : str.toCharArray())
+            push(c);
     }
 
     public boolean isEmpty() {
@@ -109,7 +119,7 @@ public class LinkedString implements LinkedStringInterface {
         return i;
     }
 
-    public static int[] getPi(char[] pattern) {
+    protected static int[] getPi(char[] pattern) {
         int[] pi = new int[pattern.length];
         int i = 1, j = 0;
         pi[0] = 0;
@@ -206,7 +216,7 @@ public class LinkedString implements LinkedStringInterface {
         return builder.toString();
     }
 
-    private CharacterNode nodeAt(int index) {
+    protected CharacterNode nodeAt(int index) {
         CharacterNode node = root;
         while (index-- > 0) {
             node = node.next;
@@ -231,7 +241,7 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
-    private String makeSubstringExceptionMessage(int startIndex, int endIndex) {
+    protected String makeSubstringExceptionMessage(int startIndex, int endIndex) {
         StringBuilder builder = new StringBuilder();
         builder.append("begin ");
         builder.append(startIndex);
@@ -337,5 +347,10 @@ public class LinkedString implements LinkedStringInterface {
         for (char c : this.toCharArray())
             new_string.push(Character.toUpperCase(c));
         return new_string;
+    }
+
+    public void clear() {
+        root = null;
+        tail = null;
     }
 }
