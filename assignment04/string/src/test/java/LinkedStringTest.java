@@ -17,6 +17,16 @@ public class LinkedStringTest extends LinkedString {
         return builder.toString();
     }
 
+    private void clear() {
+        root = null;
+        tail = null;
+    }
+
+    private void append(String str) {
+        for (int i = 0; i < str.length(); i++)
+            push(str.charAt(i));
+    }
+
     @Test
     public void testGetPi() {
         int[] actuals1 = getPi("abcdabca");

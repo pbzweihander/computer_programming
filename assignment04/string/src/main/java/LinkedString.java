@@ -64,11 +64,6 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
-    public void append(String str) {
-        for (int i = 0; i < str.length(); i++)
-            push(str.charAt(i));
-    }
-
     public boolean isEmpty() {
         return root == null;
     }
@@ -164,29 +159,18 @@ public class LinkedString implements LinkedStringInterface {
         return builder.toString();
     }
 
-    protected CharacterNode nodeAt(int index) {
+    public char charAt(int index) {
         CharacterNode node = root;
         while (index-- > 0) {
             node = node.next;
             if (node == null) {
                 StringBuilder builder = new StringBuilder();
-                builder.append("Index out of range: ");
+                builder.append("String index out of range: ");
                 builder.append(index);
                 throw new IndexOutOfBoundsException(builder.toString());
             }
         }
-        return node;
-    }
-
-    public char charAt(int index) {
-        try {
-            return nodeAt(index).value;
-        } catch (IndexOutOfBoundsException e) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("String index out of range: ");
-            builder.append(index);
-            throw new StringIndexOutOfBoundsException(builder.toString());
-        }
+        return node.value;
     }
 
     protected String makeSubstringExceptionMessage(int startIndex, int endIndex) {
@@ -310,10 +294,5 @@ public class LinkedString implements LinkedStringInterface {
         for (int i = 0; i < str.length(); i++)
             new_str.push(str.charAt(i));
         return new_str;
-    }
-
-    public void clear() {
-        root = null;
-        tail = null;
     }
 }
