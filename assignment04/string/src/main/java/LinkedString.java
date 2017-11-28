@@ -23,6 +23,16 @@ public class LinkedString implements LinkedStringInterface {
             }
             return arr;
         }
+
+        public CharacterNode after(int index) {
+            int i = 0;
+            CharacterNode node = this;
+            while (i++ < index && node != null)
+                node = node.next;
+            if (node == null)
+                throw new IndexOutOfBoundsException();
+            return node;
+        }
     }
 
     protected CharacterNode root;
@@ -139,33 +149,43 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void remove(String substr) {
+        System.out.println("doh!");
         int s_length = length();
         if (substr.isEmpty() || isEmpty() || s_length < substr.length())
             return;
         char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
-        CharacterNode node = new CharacterNode('\0');
-        node.next = root;
+        CharacterNode node = root;
+        CharacterNode start_of_pattern_node = new CharacterNode('\0');
+        start_of_pattern_node.next = root;
         int i = 0;
-        while (node.next != null) {
-            if (node.next.value == pattern[i]) {
-                CharacterNode matching_node = node.next;
-                int j = i + 1;
-                while (matching_node.next.value == pattern[j]) {
-                    matching_node = matching_node.next;
-                    j++;
-                    if (j == pattern.length) {
-                        node.next = matching_node.next;
-                        remove(substr);
-                        return;
-                    }
-                    if (matching_node.next == null)
-                        return;
-                }
-                i = pi[j - 1];
-                node = matching_node;
-            } else
+        while (node != null) {
+            if (node.value == pattern[i]) {
                 node = node.next;
+                int j = i + 1;
+                while (j < pattern.length && node != null && node.value == pattern[j]) {
+                    node = node.next;
+                    j++;
+                }
+                if (j == pattern.length) {
+                    if (start_of_pattern_node.next == root)
+                        root = node;
+                    else
+                        start_of_pattern_node.next = node;
+                    i = 0;
+                    node = root;
+                    start_of_pattern_node = new CharacterNode('\0');
+                    start_of_pattern_node.next = root;
+                } else if (node == null)
+                    return;
+                else {
+                    start_of_pattern_node = start_of_pattern_node.after(j - pi[j - 1]);
+                    i = pi[j - 1];
+                }
+            } else {
+                node = node.next;
+                start_of_pattern_node = start_of_pattern_node.next;
+            }
         }
     }
 
@@ -257,16 +277,16 @@ public class LinkedString implements LinkedStringInterface {
         while (node != null) {
             if (node.value == pattern[i]) {
                 CharacterNode matching_node = node.next;
-                int j = i + 1;
-                while (matching_node.value == pattern[j]) {
+                i++;
+                while (i < pattern.length && matching_node != null && matching_node.value == pattern[i]) {
                     matching_node = matching_node.next;
-                    j++;
-                    if (j == pattern.length)
-                        return true;
-                    if (matching_node == null)
-                        return false;
+                    i++;
                 }
-                i = pi[j - 1];
+                if (i == pattern.length)
+                    return true;
+                if (matching_node == null)
+                    return false;
+                i = pi[i - 1];
                 node = matching_node;
             } else
                 node = node.next;
