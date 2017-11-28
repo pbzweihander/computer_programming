@@ -275,9 +275,10 @@ public class LinkedStringTest extends LinkedString {
 
                 clear();
 
+                Random random = new Random();
                 String str1 = randomString(random_string_len);
-                String str2 = randomString(random_string_len);
-                String str3 = str1 + randomString(random_string_len / 2);
+                String str2 = str1.substring(0, random_string_len / 2) + randomString(random_string_len / 2);
+                String str3 = str1 + randomString(random.nextInt(random_string_len));
                 log_builder.append("str1 :\t" + str1 + "\n");
                 log_builder.append("str2 :\t" + str2 + "\n");
                 log_builder.append("str3 :\t" + str3 + "\n");

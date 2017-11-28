@@ -303,19 +303,51 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int compareTo(LinkedStringInterface str) {
-        return 0; // TODO: compareTo of LinkedString
+        return compareTo(str.toString());
     }
 
     public int compareTo(String str) {
-        return 0; // TODO: compareTo of String
+        int i = 0;
+        int my_length = 0;
+        int str_length = str.length();
+        CharacterNode node = root;
+        while (i < str_length && node != null) {
+            if (node.value != str.charAt(i))
+                return node.value - str.charAt(i);
+            i++;
+            node = node.next;
+            my_length++;
+        }
+        if (node != null)
+            while (node != null) {
+                node = node.next;
+                my_length++;
+            }
+        return my_length - str_length;
     }
 
     public int compareToIgnoreCase(LinkedStringInterface str) {
-        return 0; // TODO: compareToIgnoreCase of LinkedString
+        return compareTo(str.toString());
     }
 
     public int compareToIgnoreCase(String str) {
-        return 0; // TODO: compareToIgnoreCase of String
+        int i = 0;
+        int my_length = 0;
+        int str_length = str.length();
+        CharacterNode node = root;
+        while (i < str_length && node != null) {
+            if (Character.toLowerCase(node.value) != Character.toLowerCase(str.charAt(i)))
+                return Character.toLowerCase(node.value) - Character.toLowerCase(str.charAt(i));
+            i++;
+            node = node.next;
+            my_length++;
+        }
+        if (node != null)
+            while (node != null) {
+                node = node.next;
+                my_length++;
+            }
+        return my_length - str_length;
     }
 
     public LinkedStringInterface concat(LinkedStringInterface str) {
@@ -330,20 +362,6 @@ public class LinkedString implements LinkedStringInterface {
             new_str.push(c);
         }
         return new_str;
-    }
-
-    public LinkedString toLowerCase() {
-        LinkedString new_string = new LinkedString();
-        for (char c : this.toCharArray())
-            new_string.push(Character.toLowerCase(c));
-        return new_string;
-    }
-
-    public LinkedString toUpperCase() {
-        LinkedString new_string = new LinkedString();
-        for (char c : this.toCharArray())
-            new_string.push(Character.toUpperCase(c));
-        return new_string;
     }
 
     public void clear() {
