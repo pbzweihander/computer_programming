@@ -46,37 +46,12 @@ public class LinkedString implements LinkedStringInterface {
     public LinkedString(String str) {
         root = null;
         tail = null;
-        for (char c : str.toCharArray()) {
-            push(c);
-        }
-    }
-
-    public LinkedString(LinkedString str) {
-        root = null;
-        tail = null;
-        for (char c : str.toCharArray()) {
-            push(c);
-        }
+        for (int i = 0; i < str.length(); i++)
+            push(str.charAt(i));
     }
 
     public LinkedString(LinkedStringInterface str) {
         this(str.toString());
-    }
-
-    public LinkedString(char[] str) {
-        root = null;
-        tail = null;
-        for (char c : str) {
-            push(c);
-        }
-    }
-
-    public LinkedString(byte[] str) {
-        root = null;
-        tail = null;
-        for (byte b : str) {
-            push((char) b);
-        }
     }
 
     public void push(char element) {
@@ -89,34 +64,13 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
-    public void append(LinkedString str) {
-        if (root == null) {
-            root = str.root;
-            tail = str.tail;
-        } else {
-            tail.next = str.root;
-            tail = str.tail;
-        }
-    }
-
     public void append(String str) {
-        for (char c : str.toCharArray())
-            push(c);
+        for (int i = 0; i < str.length(); i++)
+            push(str.charAt(i));
     }
 
     public boolean isEmpty() {
         return root == null;
-    }
-
-    public char[] toCharArray() {
-        char[] arr = new char[length()];
-        int i = 0;
-        CharacterNode node = root;
-        while (node != null) {
-            arr[i++] = node.value;
-            node = node.next;
-        }
-        return arr;
     }
 
     public int length() {
@@ -130,10 +84,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     protected static int[] getPi(String pattern) {
-        return getPi(pattern, pattern.length());
-    }
-
-    protected static int[] getPi(String pattern, int length) {
+        int length = pattern.length();
         int[] pi = new int[length];
         int i = 1, j = 0;
         pi[0] = 0;
@@ -159,7 +110,7 @@ public class LinkedString implements LinkedStringInterface {
         int p_length = pattern.length();
         if (s_length < p_length)
             return;
-        int[] pi = getPi(pattern, p_length);
+        int[] pi = getPi(pattern);
         CharacterNode node = root;
         CharacterNode start_of_pattern_node = new CharacterNode('\0');
         start_of_pattern_node.next = root;
@@ -279,7 +230,7 @@ public class LinkedString implements LinkedStringInterface {
         int p_length = pattern.length();
         if (s_length < p_length)
             return false;
-        int[] pi = getPi(pattern, p_length);
+        int[] pi = getPi(pattern);
         CharacterNode node = root;
         int i = 0;
         while (node != null) {
@@ -351,16 +302,13 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public LinkedStringInterface concat(LinkedStringInterface str) {
-        LinkedString new_str = new LinkedString(this);
-        new_str.append(new LinkedString(str));
-        return new_str;
+        return concat(str.toString());
     }
 
     public LinkedStringInterface concat(String str) {
         LinkedString new_str = new LinkedString(this);
-        for (char c : str.toCharArray()) {
-            new_str.push(c);
-        }
+        for (int i = 0; i < str.length(); i++)
+            new_str.push(str.charAt(i));
         return new_str;
     }
 
