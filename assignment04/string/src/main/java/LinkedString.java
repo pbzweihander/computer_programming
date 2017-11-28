@@ -129,12 +129,16 @@ public class LinkedString implements LinkedStringInterface {
         return i;
     }
 
-    protected static int[] getPi(char[] pattern) {
-        int[] pi = new int[pattern.length];
+    protected static int[] getPi(String pattern) {
+        return getPi(pattern, pattern.length());
+    }
+
+    protected static int[] getPi(String pattern, int length) {
+        int[] pi = new int[length];
         int i = 1, j = 0;
         pi[0] = 0;
-        while (i < pattern.length) {
-            if (pattern[i] == pattern[j]) {
+        while (i < length) {
+            if (pattern.charAt(i) == pattern.charAt(j)) {
                 pi[i] = j + 1;
                 i++;
                 j++;
@@ -148,30 +152,34 @@ public class LinkedString implements LinkedStringInterface {
         return pi;
     }
 
-    public void remove(String substr) {
-        System.out.println("doh!");
-        int s_length = length();
-        if (substr.isEmpty() || isEmpty() || s_length < substr.length())
+    public void remove(String pattern) {
+        if (pattern.isEmpty() || isEmpty())
             return;
-        char[] pattern = substr.toCharArray();
-        int[] pi = getPi(pattern);
+        int s_length = length();
+        int p_length = pattern.length();
+        if (s_length < p_length)
+            return;
+        int[] pi = getPi(pattern, p_length);
         CharacterNode node = root;
         CharacterNode start_of_pattern_node = new CharacterNode('\0');
         start_of_pattern_node.next = root;
         int i = 0;
         while (node != null) {
-            if (node.value == pattern[i]) {
+            if (node.value == pattern.charAt(i)) {
                 node = node.next;
                 int j = i + 1;
-                while (j < pattern.length && node != null && node.value == pattern[j]) {
+                while (j < p_length && node != null && node.value == pattern.charAt(j)) {
                     node = node.next;
                     j++;
                 }
-                if (j == pattern.length) {
+                if (j == p_length) {
                     if (start_of_pattern_node.next == root)
                         root = node;
                     else
                         start_of_pattern_node.next = node;
+                    s_length -= p_length;
+                    if (s_length < p_length)
+                        return;
                     i = 0;
                     node = root;
                     start_of_pattern_node = new CharacterNode('\0');
@@ -262,27 +270,27 @@ public class LinkedString implements LinkedStringInterface {
         return contains(substr.toString());
     }
 
-    public boolean contains(String substr) {
-        if (substr.isEmpty())
+    public boolean contains(String pattern) {
+        if (pattern.isEmpty())
             return true;
         if (isEmpty())
             return false;
         int s_length = length();
-        if (s_length < substr.length())
+        int p_length = pattern.length();
+        if (s_length < p_length)
             return false;
-        char[] pattern = substr.toCharArray();
-        int[] pi = getPi(pattern);
+        int[] pi = getPi(pattern, p_length);
         CharacterNode node = root;
         int i = 0;
         while (node != null) {
-            if (node.value == pattern[i]) {
+            if (node.value == pattern.charAt(i)) {
                 CharacterNode matching_node = node.next;
                 i++;
-                while (i < pattern.length && matching_node != null && matching_node.value == pattern[i]) {
+                while (i < p_length && matching_node != null && matching_node.value == pattern.charAt(i)) {
                     matching_node = matching_node.next;
                     i++;
                 }
-                if (i == pattern.length)
+                if (i == p_length)
                     return true;
                 if (matching_node == null)
                     return false;
