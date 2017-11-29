@@ -44,6 +44,10 @@ public class Assignment4_2 {
         }
     }
 
+    private interface Reporter {
+        public void report(Node4_1 node, StringBuilder builder);
+    }
+
     public Assignment4_2(String s1, String s2) {
         root = new Node4_1();
         makeNode(s1, root);
@@ -78,54 +82,64 @@ public class Assignment4_2 {
     }
 
     public String report_bits_preorder() {
-        return reportBitsPreorder(root);
-    }
-
-    private String reportBitsPreorder(Node4_1 node) {
-        return reportBits(node) + (node.left != null ? reportBitsPreorder(node.left) : "")
-                + (node.right != null ? reportBitsPreorder(node.right) : "");
-    }
-
-    public String report_bits_levelorder() {
-        Queue<Node4_1> level_queue = new Queue<>();
-        String out = "";
-        level_queue.push(root);
-        while (!level_queue.isEmpty()) {
-            Node4_1 node = level_queue.pop();
-            out += reportBits(node);
-            if (node.left != null)
-                level_queue.push(node.left);
-            if (node.right != null)
-                level_queue.push(node.right);
-        }
-        return out;
+        return reportPreorder(root, (Node4_1 node, StringBuilder builder) -> {
+            reportBits(node, builder);
+        });
     }
 
     public String report_preorder() {
-        return reportPreorder(root);
+        return reportPreorder(root, (Node4_1 node, StringBuilder builder) -> {
+            reportCharacter(node, builder);
+        });
     }
 
-    private String reportPreorder(Node4_1 node) {
-        return node.character + (node.left != null ? reportPreorder(node.left) : "")
-                + (node.right != null ? reportPreorder(node.right) : "");
+    public String report_bits_levelorder() {
+        return reportLevelOrder(root, (Node4_1 node, StringBuilder builder) -> {
+            reportBits(node, builder);
+        });
     }
 
     public String report_levelorder() {
+        return reportLevelOrder(root, (Node4_1 node, StringBuilder builder) -> {
+            reportCharacter(node, builder);
+        });
+    }
+
+    private String reportPreorder(Node4_1 node, Reporter reporter) {
+        StringBuilder builder = new StringBuilder();
+        reportPreorder_inner(root, builder, reporter);
+        return builder.toString();
+    }
+
+    private void reportPreorder_inner(Node4_1 node, StringBuilder builder, Reporter reporter) {
+        reporter.report(node, builder);
+        if (node.left != null)
+            reportPreorder_inner(node.left, builder, reporter);
+        if (node.right != null)
+            reportPreorder_inner(node.right, builder, reporter);
+    }
+
+    private String reportLevelOrder(Node4_1 root, Reporter reporter) {
         Queue<Node4_1> level_queue = new Queue<>();
-        String out = "";
+        StringBuilder builder = new StringBuilder();
         level_queue.push(root);
         while (!level_queue.isEmpty()) {
             Node4_1 node = level_queue.pop();
-            out += node.character;
+            reporter.report(node, builder);
             if (node.left != null)
                 level_queue.push(node.left);
             if (node.right != null)
                 level_queue.push(node.right);
         }
-        return out;
+        return builder.toString();
     }
 
-    private String reportBits(Node4_1 node) {
-        return (node.left != null ? "1" : "0") + (node.right != null ? "1" : "0");
+    private void reportBits(Node4_1 node, StringBuilder builder) {
+        builder.append(node.left != null ? "1" : "0");
+        builder.append(node.right != null ? "1" : "0");
+    }
+
+    private void reportCharacter(Node4_1 node, StringBuilder builder) {
+        builder.append(node.character);
     }
 }
