@@ -2,7 +2,7 @@ ZIPNAME=submit.zip
 
 submit: out
 	cp tree/src/Assignment4*.java out/
-	cp string/src/LinkedString.java out/Assignment4_3/
+	cp string/src/main/java/LinkedString.java out/Assignment4_3/
 	cd out && zip -r $(ZIPNAME) ./*
 
 out:
