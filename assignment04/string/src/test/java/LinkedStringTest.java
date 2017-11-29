@@ -29,10 +29,10 @@ public class LinkedStringTest extends LinkedString {
 
     @Test
     public void testGetPi() {
-        int[] actuals1 = getPi("abcdabca");
-        int[] actuals2 = getPi("aabaabaaa");
-        int[] actuals3 = getPi("abcaby");
-        int[] actuals4 = getPi("acacabacacabacacac");
+        int[] actuals1 = getPi("abcdabca".toCharArray());
+        int[] actuals2 = getPi("aabaabaaa".toCharArray());
+        int[] actuals3 = getPi("abcaby".toCharArray());
+        int[] actuals4 = getPi("acacabacacabacacac".toCharArray());
         assertArrayEquals("abcdabca", new int[] { 0, 0, 0, 0, 1, 2, 3, 1 }, actuals1);
         assertArrayEquals("aabaabaaa", new int[] { 0, 1, 0, 1, 2, 3, 4, 5, 2 }, actuals2);
         assertArrayEquals("abcaby", new int[] { 0, 0, 0, 1, 2, 0 }, actuals3);
