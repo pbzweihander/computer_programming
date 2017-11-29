@@ -244,6 +244,57 @@ public class LinkedString implements LinkedStringInterface {
         return false;
     }
 
+    public int indexOf(char c) {
+        if (isEmpty())
+            return -1;
+        CharacterNode node = root;
+        int cursor = 0;
+        while (node != null && node.value != c) {
+            node = node.next;
+            cursor++;
+        }
+        if (node != null)
+            return cursor;
+        return -1;
+    }
+
+    public int indexOf(String pattern) {
+        if (pattern.isEmpty())
+            return 0;
+        if (isEmpty())
+            return -1;
+        int s_length = length();
+        int p_length = pattern.length();
+        if (s_length < p_length)
+            return -1;
+        int[] pi = getPi(pattern);
+        CharacterNode node = root;
+        int start_of_pattern_cursor = 0;
+        int i = 0;
+        while (node != null) {
+            if (node.value == pattern.charAt(i)) {
+                node = node.next;
+                int j = i + 1;
+                while (j < p_length && node != null && node.value == pattern.charAt(j)) {
+                    node = node.next;
+                    j++;
+                }
+                if (j == p_length)
+                    return start_of_pattern_cursor;
+                else if (node == null)
+                    return -1;
+                else {
+                    start_of_pattern_cursor += j - pi[j - 1];
+                    i = pi[j - 1];
+                }
+            } else {
+                node = node.next;
+                start_of_pattern_cursor++;
+            }
+        }
+        return -1;
+    }
+
     public int compareTo(LinkedStringInterface str) {
         return compareTo(str.toString());
     }

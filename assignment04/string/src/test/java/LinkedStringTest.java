@@ -362,4 +362,64 @@ public class LinkedStringTest extends LinkedString {
             throw e;
         }
     }
+
+    @Test
+    public void testIndexOf() {
+        StringBuilder log_builder = new StringBuilder();
+
+        log_builder.append(
+                "========================================= testIndexOf =========================================\n");
+
+        try {
+            for (int i = 0; i < test_count; i++) {
+                log_builder.append("----------------------------------------- test " + i
+                        + " -----------------------------------------\n");
+
+                clear();
+
+                String random_str = randomString(random_string_len);
+                log_builder.append("str1 :\t" + random_str + "\n");
+
+                Random random = new Random();
+                char c = random_str.charAt(random.nextInt(random_string_len - 1));
+                log_builder.append("char :\t" + c + "\n");
+
+                int startIndex = random.nextInt(random_str.length() / 2);
+                int endIndex = random_str.length() / 2 + random.nextInt(random_str.length() / 2 - 1);
+                String substr = random_str.substring(startIndex, endIndex);
+                String substr2 = randomString(substr.length());
+                log_builder.append("substr :\t" + substr + "\n");
+                log_builder.append("substr2 :\t" + substr2 + "\n");
+
+                append(random_str);
+
+                int index_of_c = random_str.indexOf(c);
+                log_builder.append("expected1 :\t" + index_of_c + "\n");
+                int index_of_substr = random_str.indexOf(substr);
+                log_builder.append("expected2 :\t" + index_of_substr + "\n");
+                int index_of_substr2 = random_str.indexOf(substr2);
+                log_builder.append("expected3 :\t" + index_of_substr2 + "\n");
+
+                int actual1 = indexOf(c);
+                log_builder.append("actual1 :\t" + actual1 + "\n");
+                int actual2 = indexOf(substr);
+                log_builder.append("actual2 :\t" + actual2 + "\n");
+                int actual3 = indexOf(substr2);
+                log_builder.append("actual3 :\t" + actual3 + "\n");
+
+                assertEquals("\nstring :\t" + random_str + "\nchar :\t" + c + "\nexpected :\t" + index_of_c
+                        + "\nactual :\t" + actual1, index_of_c, actual1);
+                assertEquals("\nstring :\t" + random_str + "\nsubstr :\t" + substr + "\nexpected :\t" + index_of_substr
+                        + "\nactual :\t" + actual2, index_of_substr, actual2);
+                assertEquals("\nstring :\t" + random_str + "\nsubstr2 :\t" + substr2 + "\nexpected :\t"
+                        + index_of_substr2 + "\nactual :\t" + actual3, index_of_substr2, actual3);
+            }
+        } catch (AssertionError e) {
+            System.out.println(log_builder.toString());
+            throw e;
+        } catch (Exception e) {
+            System.out.println(log_builder.toString());
+            throw e;
+        }
+    }
 }
