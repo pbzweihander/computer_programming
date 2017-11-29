@@ -124,9 +124,9 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void remove(String substr) {
-        if (substr.isEmpty() || isEmpty())
-            return;
         char[] pattern = substr.toCharArray();
+        if (pattern.length == 0 || isEmpty())
+            return;
         int[] pi = getPi(pattern);
         CharacterNode m_node = new EmptyHeadCharacterNode(root);
         CharacterNode m_plus_i_node = root;
@@ -237,11 +237,11 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int indexOf(String substr) {
-        if (substr.isEmpty())
+        char[] pattern = substr.toCharArray();
+        if (pattern.length == 0)
             return 0;
         if (isEmpty())
             return -1;
-        char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
         CharacterNode m_node = root, m_plus_i_node = root;
         int m = 0, i = 0;
