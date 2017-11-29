@@ -9,26 +9,24 @@ public class Assignment4_1 {
             public Node(T element) {
                 value = element;
             }
-
-            public void attach(T element) {
-                if (next == null)
-                    next = new Node(element);
-                else
-                    next.attach(element);
-            }
         }
 
         private Node root;
+        private Node tail;
 
         public Queue() {
             root = null;
+            tail = null;
         }
 
         public void push(T element) {
-            if (root == null)
+            if (root == null) {
                 root = new Node(element);
-            else
-                root.attach(element);
+                tail = root;
+            } else {
+                tail.next = new Node(element);
+                tail = tail.next;
+            }
         }
 
         public T pop() {
@@ -36,6 +34,8 @@ public class Assignment4_1 {
                 return null;
             final T t = root.value;
             root = root.next;
+            if (root == null)
+                tail = null;
             return t;
         }
 
@@ -45,11 +45,9 @@ public class Assignment4_1 {
     }
 
     public Assignment4_1(String line1, String line2) {
-        String str_queue = "";
         Queue<Node4_1> node_queue = new Queue<>();
         Queue<Node4_1> child_needed_queue = new Queue<>();
         int i = 0;
-        int j = 0;
         for (char c : line1.toCharArray()) {
             Node4_1 node = new Node4_1();
             boolean is_leaf = c == '1';
