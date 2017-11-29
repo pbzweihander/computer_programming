@@ -56,9 +56,9 @@ public class Assignment4_2 {
         if (dna.charAt(1) == '1')
             parent.right = new Node4_1();
         dna = dna.substring(2);
-        if (parent.left != null && !dna.isEmpty())
+        if (parent.left != null)
             dna = makeNode(dna, parent.left);
-        if (parent.right != null && !dna.isEmpty())
+        if (parent.right != null)
             dna = makeNode(dna, parent.right);
         return dna;
     }
@@ -68,9 +68,8 @@ public class Assignment4_2 {
         labelling_queue.push(root);
         while (!labelling_queue.isEmpty()) {
             Node4_1 node = labelling_queue.pop();
-            node.label = dna.charAt(0);
-            if (dna.length() > 1)
-                dna = dna.substring(1);
+            node.character = dna.charAt(0);
+            dna = dna.substring(1);
             if (node.left != null)
                 labelling_queue.push(node.left);
             if (node.right != null)
@@ -107,7 +106,7 @@ public class Assignment4_2 {
     }
 
     private String reportPreorder(Node4_1 node) {
-        return node.label + (node.left != null ? reportPreorder(node.left) : "")
+        return node.character + (node.left != null ? reportPreorder(node.left) : "")
                 + (node.right != null ? reportPreorder(node.right) : "");
     }
 
@@ -117,7 +116,7 @@ public class Assignment4_2 {
         level_queue.push(root);
         while (!level_queue.isEmpty()) {
             Node4_1 node = level_queue.pop();
-            out += node.label;
+            out += node.character;
             if (node.left != null)
                 level_queue.push(node.left);
             if (node.right != null)
