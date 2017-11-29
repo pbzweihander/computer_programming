@@ -296,7 +296,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int compareToIgnoreCase(LinkedStringInterface str) {
-        return compareTo(str.toString());
+        return compareToIgnoreCase(str.toString());
     }
 
     public int compareToIgnoreCase(String str) {
