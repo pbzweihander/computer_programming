@@ -35,6 +35,13 @@ public class LinkedString implements LinkedStringInterface {
         }
     }
 
+    private class EmptyHeadCharacterNode extends CharacterNode {
+        public EmptyHeadCharacterNode(CharacterNode next) {
+            super('\0');
+            this.next = next;
+        }
+    }
+
     protected CharacterNode root;
     protected CharacterNode tail;
 
@@ -95,20 +102,22 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     protected static int[] getPi(char[] pattern) {
-        int length = pattern.length;
-        int[] pi = new int[length];
-        int i = 1, j = 0;
-        pi[0] = 0;
-        while (i < length) {
-            if (pattern[i] == pattern[j]) {
-                pi[i] = j + 1;
-                i++;
-                j++;
-            } else {
-                if (j > 0)
-                    j = pi[j - 1];
-                else
-                    i++;
+        int[] pi = new int[pattern.length];
+        int pos = 1, cnd = 0;
+        pi[0] = -1;
+
+        while (pos < pattern.length) {
+            if (pattern[pos] == pattern[cnd])
+                pi[pos++] = pi[cnd++];
+            else {
+                pi[pos] = cnd;
+                cnd = pi[cnd];
+
+                while (cnd >= 0 && pattern[pos] != pattern[cnd])
+                    cnd = pi[cnd];
+
+                pos++;
+                cnd++;
             }
         }
         return pi;
@@ -117,45 +126,38 @@ public class LinkedString implements LinkedStringInterface {
     public void remove(String substr) {
         if (substr.isEmpty() || isEmpty())
             return;
-        int s_length = length();
-        int p_length = substr.length();
-        if (s_length < p_length)
-            return;
         char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
-        CharacterNode node = root;
-        CharacterNode start_of_pattern_node = new CharacterNode('\0');
-        start_of_pattern_node.next = root;
+        CharacterNode m_node = new EmptyHeadCharacterNode(root);
+        CharacterNode m_plus_i_node = root;
         int i = 0;
-        while (node != null) {
-            if (node.value == pattern[i]) {
-                node = node.next;
-                int j = i + 1;
-                while (j < p_length && node != null && node.value == pattern[j]) {
-                    node = node.next;
-                    j++;
-                }
-                if (j == p_length) {
-                    if (start_of_pattern_node.next == root)
-                        root = node;
+
+        while (m_plus_i_node != null) {
+            if (pattern[i] == m_plus_i_node.value) {
+                m_plus_i_node = m_plus_i_node.next;
+                i++;
+                if (i == pattern.length) {
+                    if (m_node instanceof EmptyHeadCharacterNode)
+                        root = m_plus_i_node;
                     else
-                        start_of_pattern_node.next = node;
-                    s_length -= p_length;
-                    if (s_length < p_length)
-                        return;
+                        m_node.next = m_plus_i_node;
+                    m_node = new EmptyHeadCharacterNode(root);
+                    m_plus_i_node = root;
                     i = 0;
-                    node = root;
-                    start_of_pattern_node = new CharacterNode('\0');
-                    start_of_pattern_node.next = root;
-                } else if (node == null)
-                    return;
-                else {
-                    start_of_pattern_node = start_of_pattern_node.after(j - pi[j - 1]);
-                    i = pi[j - 1];
                 }
             } else {
-                node = node.next;
-                start_of_pattern_node = start_of_pattern_node.next;
+                try {
+                    m_node = m_node.after(i - pi[i]);
+                    if (pi[i] > -1) {
+                        m_plus_i_node = m_node.after(pi[i] + 1);
+                        i = pi[i];
+                    } else {
+                        m_plus_i_node = m_node.next;
+                        i = 0;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    return;
+                }
             }
         }
     }
@@ -217,36 +219,7 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public boolean contains(String substr) {
-        if (substr.isEmpty())
-            return true;
-        if (isEmpty())
-            return false;
-        int s_length = length();
-        int p_length = substr.length();
-        if (s_length < p_length)
-            return false;
-        char[] pattern = substr.toCharArray();
-        int[] pi = getPi(pattern);
-        CharacterNode node = root;
-        int i = 0;
-        while (node != null) {
-            if (node.value == pattern[i]) {
-                CharacterNode matching_node = node.next;
-                i++;
-                while (i < p_length && matching_node != null && matching_node.value == pattern[i]) {
-                    matching_node = matching_node.next;
-                    i++;
-                }
-                if (i == p_length)
-                    return true;
-                if (matching_node == null)
-                    return false;
-                i = pi[i - 1];
-                node = matching_node;
-            } else
-                node = node.next;
-        }
-        return false;
+        return indexOf(substr) > -1;
     }
 
     public int indexOf(char c) {
@@ -270,33 +243,29 @@ public class LinkedString implements LinkedStringInterface {
             return -1;
         char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
-        CharacterNode node = root;
-        int start_of_pattern_cursor = 0;
-        int where_is_node = 0; // TODO: debug
-        int i = 0;
-        while (node != null) {
-            if (node.value == pattern[i]) {
-                node = node.next;
-                where_is_node++; // TODO: debug
-                int j = i + 1;
-                while (j < pattern.length && node != null && node.value == pattern[j]) {
-                    node = node.next;
-                    where_is_node++;
-                    j++;
-                }
-                if (node == null && j < pattern.length)
-                    return -1;
-                else if (j == pattern.length) {
-                    // System.out.println("" + where_is_node + " : " + start_of_pattern_cursor); // TODO: debug
-                    return start_of_pattern_cursor;
-                } else {
-                    start_of_pattern_cursor += j - pi[j - 1];
-                    i = pi[j - 1];
-                }
+        CharacterNode m_node = root, m_plus_i_node = root;
+        int m = 0, i = 0;
+
+        while (m_plus_i_node != null) {
+            if (pattern[i] == m_plus_i_node.value) {
+                m_plus_i_node = m_plus_i_node.next;
+                i++;
+                if (i == pattern.length)
+                    return m;
             } else {
-                node = node.next;
-                where_is_node++; // TODO: debug
-                start_of_pattern_cursor++;
+                try {
+                    m_node = m_node.after(i - pi[i]);
+                    m += i - pi[i];
+                    if (pi[i] > -1) {
+                        m_plus_i_node = m_node.after(pi[i]);
+                        i = pi[i];
+                    } else {
+                        m_plus_i_node = m_node;
+                        i = 0;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    return -1;
+                }
             }
         }
         return -1;
