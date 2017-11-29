@@ -23,6 +23,9 @@ run1: 1
 run2: 2
 	$(JAVA) -cp $(OUTPUT_DIR) Tester4_2
 
+test: Main.class
+	$(JAVA) -Xss4M -Xmx128M -cp $(OUTPUT_DIR) Main check
+
 .java.class:
 	$(JAVAC) $(JFLAGS) -cp $(OUTPUT_DIR) -d $(OUTPUT_DIR) $<
 
@@ -37,3 +40,5 @@ Assignment4_2.class: Node4_1.class Assignment4_2.java
 
 Tester4_1.class: Assignment4_1.class Tester4_1.java
 Tester4_2.class: Assignment4_2.class Tester4_2.java
+
+Main.class: Assignment4_1.class Assignment4_2.class Main.java
