@@ -26,4 +26,10 @@ public interface LinkedStringInterface {
     LinkedStringInterface concat(LinkedStringInterface str);
 
     LinkedStringInterface concat(String str);
+
+    int indexOf(char ch);
+
+    int indexOf(String str);
+
+    LinkedStringInterface replace(char oc, char nc);
 }
