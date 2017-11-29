@@ -9,3 +9,16 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
+
+sourceSets.main.java {
+    srcDir 'src/kipa/java'
+}
+
+apply plugin: 'application'
+mainClassName = 'Main'
+
+run {
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}
