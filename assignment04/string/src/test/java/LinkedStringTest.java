@@ -378,7 +378,7 @@ public class LinkedStringTest extends LinkedString {
                 clear();
 
                 String random_str = randomString(random_string_len);
-                log_builder.append("str1 :\t" + random_str + "\n");
+                log_builder.append("string :\t" + random_str + "\n");
 
                 Random random = new Random();
                 char c = random_str.charAt(random.nextInt(random_string_len - 1));
@@ -413,6 +413,49 @@ public class LinkedStringTest extends LinkedString {
                         + "\nactual :\t" + actual2, index_of_substr, actual2);
                 assertEquals("\nstring :\t" + random_str + "\nsubstr2 :\t" + substr2 + "\nexpected :\t"
                         + index_of_substr2 + "\nactual :\t" + actual3, index_of_substr2, actual3);
+            }
+        } catch (AssertionError e) {
+            System.out.println(log_builder.toString());
+            throw e;
+        } catch (Exception e) {
+            System.out.println(log_builder.toString());
+            throw e;
+        }
+    }
+
+    @Test
+    public void testReplace() {
+        StringBuilder log_builder = new StringBuilder();
+
+        log_builder.append(
+                "========================================= testReplace =========================================\n");
+
+        try {
+            for (int i = 0; i < test_count; i++) {
+                log_builder.append("----------------------------------------- test " + i
+                        + " -----------------------------------------\n");
+
+                clear();
+
+                String random_str = randomString(random_string_len);
+                log_builder.append("string :\t" + random_str + "\n");
+
+                Random random = new Random();
+                char c = random_str.charAt(random.nextInt(random_string_len - 1));
+                char d = random_str.charAt(random.nextInt(random_string_len - 1));
+                log_builder.append("char1 :\t" + c + "\n");
+                log_builder.append("char2 :\t" + d + "\n");
+
+                append(random_str);
+
+                String expected = random_str.replace(c, d);
+                log_builder.append("expected :\t" + expected + "\n");
+
+                String actual = replace(c, d).toString();
+                log_builder.append("actual :\t" + actual + "\n");
+
+                assertTrue("\nstring :\t" + random_str + "\nchar1 :\t" + c + "\nchar2 :\t" + d + "\nexpected :\t"
+                        + expected + "\nactual :\t" + actual, expected.equals(actual));
             }
         } catch (AssertionError e) {
             System.out.println(log_builder.toString());

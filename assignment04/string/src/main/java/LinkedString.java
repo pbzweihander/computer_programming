@@ -353,4 +353,15 @@ public class LinkedString implements LinkedStringInterface {
             new_str.push(str.charAt(i));
         return new_str;
     }
+
+    public LinkedStringInterface replace(char a, char b) {
+        LinkedString new_str = new LinkedString(this);
+        CharacterNode node = new_str.root;
+        while (node != null) {
+            if (node.value == a)
+                node.value = b;
+            node = node.next;
+        }
+        return new_str;
+    }
 }
