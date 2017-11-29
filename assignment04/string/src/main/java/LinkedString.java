@@ -54,6 +54,13 @@ public class LinkedString implements LinkedStringInterface {
         this(str.toString());
     }
 
+    public LinkedString(char[] str) {
+        root = null;
+        tail = null;
+        for (char c : str)
+            push(c);
+    }
+
     public void push(char element) {
         if (root == null) {
             root = new CharacterNode(element);
