@@ -8,14 +8,19 @@
  * USE AT YOUR OWN RISK.
  */
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Main {
+
     public Random rand = new Random();
     public final boolean is_windows = System.getProperty("os.name").startsWith("Windows");
 
     public Object[] handler;
     public Object checker;
+
+    public final long time_limit = 2000000000L;
+    public final long hard_time_limit = 5000000000L;
 
     private interface Checkable {
         public Object run(String s) throws Exception;
@@ -28,6 +33,19 @@ public class Main {
     public void start(String[] args) {
         boolean all = args.length == 0 || isIn(args, "all");
         boolean canContinue = true;
+        printlnColored("LinkedString.class Integrity Check", "\033[4m\033[1;35m%s\033[0m");
+        try {
+            if (!clarity_check("build/classes/java/main/LinkedString.class")) {
+                if (is_windows) {
+                    System.out.println("This sentence was to be colored and to blink properly.");
+                    System.out.println("I'm sorry it isn't because you use WINDOWS.");
+                }
+                return;
+            }
+        } catch (Exception err) {
+            System.out.println("How could this happen?");
+            return;
+        }
         if (all || isIn(args, "toString")) {
             printlnColored("toString - String constructor", "\033[4m\033[1;35m%s\033[0m");
             canContinue = this.check((String s) -> s, (String s) -> new LinkedString(s).toString());
@@ -42,7 +60,12 @@ public class Main {
                             rand.nextInt(s.length() * 2) - s.length() / 2 };
                     return s.substring((Integer) handler[0], (Integer) handler[1]);
                 }, (String s) -> {
-                    return new LinkedString(s).substring((Integer) handler[0], (Integer) handler[1]).toString();
+                    LinkedString ls = new LinkedString(s);
+                    String res = ls.substring((Integer) handler[0], (Integer) handler[1]).toString();
+                    if (!ls.toString().equals(s)) {
+                        return "a message; you modified your LinkedString.";
+                    }
+                    return res;
                 });
             }
             if (all || isIn(args, "concat")) {
@@ -59,12 +82,19 @@ public class Main {
                         return new LinkedString(s).concat((LinkedStringInterface) null);
                     }
                     int u = rand.nextInt(s.length()), v = rand.nextInt(3);
+                    LinkedString ls = new LinkedString(s.substring(0, u));
+                    String res;
                     if (v == 0) {
-                        return new LinkedString(s.substring(0, u)).concat(s.substring(u)).toString();
+                        res = ls.concat(s.substring(u)).toString();
                     } else if (v == 1) {
-                        return new LinkedString(s.substring(0, u)).concat(new LinkedString(s.substring(u))).toString();
+                        res = ls.concat(new LinkedString(s.substring(u))).toString();
+                    } else {
+                        res = ls.concat(new Kipa(s.substring(u))).toString();
                     }
-                    return new LinkedString(s.substring(0, u)).concat(new Kipa(s.substring(u))).toString();
+                    if (!ls.toString().equals(s.substring(0, u))) {
+                        return "a message; you modified your LinkedString.";
+                    }
+                    return res;
                 });
             }
             if (all || isIn(args, "charAt")) {
@@ -181,8 +211,14 @@ public class Main {
                         handler = new Object[] { '%', s.charAt(rand.nextInt(s.length())) };
                     }
                     return s.replace((Character) handler[0], (Character) handler[1]);
-                }, (String s) -> new LinkedString(s).replace((Character) handler[0], (Character) handler[1])
-                        .toString());
+                }, (String s) -> {
+                    LinkedString ls = new LinkedString(s);
+                    String res = ls.replace((Character) handler[0], (Character) handler[1]).toString();
+                    if (!ls.toString().equals(s)) {
+                        return "a message; you modified your LinkedString.";
+                    }
+                    return res;
+                });
             }
             if (all || isIn(args, "remove")) {
                 printlnColored("remove", "\033[4m\033[1;35m%s\033[0m");
@@ -335,7 +371,7 @@ public class Main {
                 th.start();
                 long stime = System.nanoTime();
                 while (th.isAlive()) {
-                    if (System.nanoTime() - stime > 1000000000L) {
+                    if (System.nanoTime() - stime > time_limit) {
                         break;
                     }
                 }
@@ -376,7 +412,6 @@ public class Main {
         try {
             checker = null;
             Thread th = new Thread(new Runnable() {
-
                 @Override
                 public void run() {
                     try {
@@ -385,12 +420,11 @@ public class Main {
                         checker = null;
                     }
                 }
-
             });
             th.start();
             long stime = System.nanoTime();
             while (th.isAlive()) {
-                if (System.nanoTime() - stime > 1000000000L) {
+                if (System.nanoTime() - stime > hard_time_limit) {
                     break;
                 }
             }
@@ -400,12 +434,60 @@ public class Main {
             } else if (!o.equals(checker)) {
                 throw new Exception("Wrong Answer: expected " + o + ", got " + checker);
             }
+            printColored(" ok! ", "\033[1;32m%s\033[0m");
+            System.out.println("(" + temp + "ms)");
         } catch (Exception err) {
             printlnColored(" " + err.getMessage(), "\033[1;31m%s\033[0m");
             return false;
-        } finally {
-            printColored(" ok! ", "\033[1;32m%s\033[0m");
-            System.out.println("(" + temp + "ms)");
+        }
+        return true;
+    }
+
+    public boolean clarity_check(String filename) throws Exception {
+        Analyzer a = new Analyzer(filename);
+        int i;
+        for (i = 0; i < a.pool.length; ++i) {
+            Analyzer.Pool ap = a.pool[i];
+            if (ap instanceof Analyzer.MethodPool) {
+                Analyzer.MethodPool amp = (Analyzer.MethodPool) ap;
+                String clStr = a.pool[amp.v].toString(a);
+                if (clStr.equals("Class(java/lang/String)")) {
+                    String anatp = a.pool[amp.w].toString(a);
+                    String methodName = ((Analyzer.UTFPool) a.pool[((Analyzer.NameAndTypePool) a.pool[amp.w]).v]).v;
+                    if (Arrays
+                            .asList(new String[] { "NameAndType(toCharArray:()[C)",
+                                    "NameAndType(toString:()Ljava/lang/String;)", "NameAndType(charAt:(I)C)", })
+                            .contains(anatp) || Arrays.asList(new String[] { "<init>" }).contains(methodName)) {
+                        System.out.print("Safe and happy little method String::");
+                        printColored(methodName, "\033[1;36m%s\033[0m");
+                        System.out.print(" detected. ");
+                        printlnColored("Good to go.", "\033[5m\033[1;32m%s\033[0m");
+                    } else {
+                        System.out.print("Dangerous and ugly monstrous method ");
+                        printColored(methodName, "\033[1;36m%s\033[0m");
+                        System.out.print(" detected. ");
+                        printlnColored("Cannot continue.", "\033[5m\033[1;31m%s\033[0m");
+                        return false;
+                    }
+                } else if (clStr.equals("Class(java/lang/StringBuilder)")) {
+                    String anatp = a.pool[amp.w].toString(a);
+                    String methodName = ((Analyzer.UTFPool) a.pool[((Analyzer.NameAndTypePool) a.pool[amp.w]).v]).v;
+                    if (Arrays.asList(
+                            new String[] { "NameAndType(<init>:()V)", "NameAndType(toString:()Ljava/lang/String;)" })
+                            .contains(anatp) || Arrays.asList(new String[] { "append" }).contains(methodName)) {
+                        System.out.print("Safe and happy little method StringBuilder::");
+                        printColored(methodName, "\033[1;36m%s\033[0m");
+                        System.out.print(" detected. ");
+                        printlnColored("Good to go.", "\033[5m\033[1;32m%s\033[0m");
+                    } else {
+                        System.out.print("Dangerous and ugly monstrous method ");
+                        printColored(methodName, "\033[1;36m%s\033[0m");
+                        System.out.print(" detected. ");
+                        printlnColored("Cannot continue.", "\033[5m\033[1;31m%s\033[0m");
+                        return false;
+                    }
+                }
+            }
         }
         return true;
     }

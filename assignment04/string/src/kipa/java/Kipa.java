@@ -37,14 +37,6 @@ public class Kipa implements LinkedStringInterface {
         return s.contains(substr);
     }
 
-    public int indexOf(char c) {
-        return s.indexOf(c);
-    }
-
-    public int indexOf(String substr) {
-        return s.indexOf(substr);
-    }
-
     public int compareTo(LinkedStringInterface str) {
         return (Integer) Unimplemented();
     }
@@ -69,8 +61,16 @@ public class Kipa implements LinkedStringInterface {
         return new Kipa(s + str);
     }
 
-    public LinkedStringInterface replace(char a, char b) {
-        return (LinkedStringInterface) Unimplemented();
+    public LinkedStringInterface replace(char old, char n) {
+        return new Kipa(s.replace(old, n));
+    }
+
+    public int indexOf(char c) {
+        return s.indexOf(c);
+    }
+
+    public int indexOf(String v) {
+        return s.indexOf(v);
     }
 
     private Object Unimplemented() {
