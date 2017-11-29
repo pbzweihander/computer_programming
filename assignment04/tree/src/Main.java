@@ -77,69 +77,6 @@ public class Main {
                     printlnColored(err.getMessage(), " \033[1;31m%s\033[0m");
                 }
             }
-        } else if (args[0].equals("make")) {
-            int cnt = 0;
-            try {
-                cnt = Integer.parseInt(args[1]);
-            } catch (Exception err) {
-                cnt = 300;
-            }
-            PrintStream out = null;
-            if (cnt >= 0) {
-                try {
-                    out = new PrintStream(new File("tests/1.txt"));
-                    out.println(cnt);
-                    for (int tc_num = 1; tc_num <= cnt; ++tc_num) {
-                        System.out.print("\rMaking first test cases... (" + tc_num + "/" + cnt + ")");
-                        int sz = (int) (rand.nextInt(100001 / cnt) + (100001L * tc_num) / cnt);
-                        if (tc_num <= 3) {
-                            sz = tc_num * 5;
-                        }
-                        String bit = makeBitString_1(sz), arb = makeString(sz);
-                        Node4_1 now = new Assignment4_1(bit, arb).getRoot();
-                        out.println(String.join("-", bit, arb, traversal(now)));
-                    }
-                    System.out.println(" done.");
-                } catch (Exception err) {
-                    System.err.println("A critical error occurred while making test cases");
-                    err.printStackTrace();
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                }
-            }
-            try {
-                cnt = Integer.parseInt(args[2]);
-            } catch (Exception err) {
-                cnt = 150;
-            }
-            out = null;
-            if (cnt >= 0) {
-                try {
-                    out = new PrintStream(new File("tests/2.txt"));
-                    out.println(cnt);
-                    for (int tc_num = 1; tc_num <= cnt; ++tc_num) {
-                        System.out.print("\rMaking second test cases... (" + tc_num + "/" + cnt + ")");
-                        int sz = (int) (rand.nextInt(100001 / cnt) + (100001L * tc_num) / cnt);
-                        if (tc_num <= 3) {
-                            sz = tc_num * 5;
-                        }
-                        String bit = makeBitString_2(sz), arb = makeString(sz);
-                        Assignment4_2 now = new Assignment4_2(bit, arb);
-                        out.println(String.join("-", traversal(now.root), now.report_bits_preorder(),
-                                now.report_preorder(), now.report_bits_levelorder(), now.report_levelorder()));
-                    }
-                    System.out.println(" done.");
-                } catch (Exception err) {
-                    System.err.println("A critical error occurred while making test cases");
-                    err.printStackTrace();
-                } finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                }
-            }
         }
     }
 
