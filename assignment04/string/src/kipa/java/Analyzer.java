@@ -3,6 +3,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Vector;
 
 public class Analyzer {
 
@@ -27,6 +28,45 @@ public class Analyzer {
                 ++i;
             }
         }
+    }
+
+    public String prettyMethod(MethodPool mp) {
+        String className = ((UTFPool) pool[((ClassPool) pool[mp.v]).v]).v;
+        className = className.substring(className.lastIndexOf('/') + 1);
+        NameAndTypePool natp = (NameAndTypePool) pool[mp.w];
+        String methodName = ((UTFPool) pool[natp.v]).v;
+        String typeDescriptor = ((UTFPool) pool[natp.w]).v;
+        Vector<String> vs = new Vector<String>();
+        int status = 0, i, tempIdx = -1, len = typeDescriptor.length();
+        for (i = 0; i < len; ++i) {
+            int idx;
+            char nowChar = typeDescriptor.charAt(i);
+            if (nowChar == '[') {
+                status++;
+            } else if (status < 256 && (idx = "BCDFIJSVZ".indexOf(nowChar)) >= 0) {
+                String temp = new String[] { "byte", "char", "double", "float", "int", "long", "short", "void",
+                        "boolean" }[idx];
+                while (status-- > 0) {
+                    temp += "[]";
+                }
+                vs.add(temp);
+                status = 0;
+            } else if (nowChar == 'L') {
+                status |= 256;
+                tempIdx = i + 1;
+            } else if (status >= 256 && nowChar == ';') {
+                String temp = typeDescriptor.substring(tempIdx, i);
+                temp = temp.substring(temp.lastIndexOf('/') + 1);
+                status &= 255;
+                while (status-- > 0) {
+                    temp += "[]";
+                }
+                vs.add(temp);
+                status = 0;
+            }
+        }
+        String t = vs.remove(vs.size() - 1);
+        return t + " " + className + "::" + methodName + "(" + String.join(", ", vs) + ")";
     }
 
     public interface Pool {

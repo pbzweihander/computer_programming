@@ -20,7 +20,7 @@ public class Main {
     public Object checker;
 
     public final long time_limit = 2000000000L;
-    public final long hard_time_limit = 5000000000L;
+    public final long hard_time_limit = 50000000000L;
 
     private interface Checkable {
         public Object run(String s) throws Exception;
@@ -48,9 +48,11 @@ public class Main {
         }
         if (all || isIn(args, "toString")) {
             printlnColored("toString - String constructor", "\033[4m\033[1;35m%s\033[0m");
-            canContinue = this.check((String s) -> s, (String s) -> new LinkedString(s).toString());
+            canContinue = this.check((String s) -> s.length() == 2000 ? "" : s,
+                    (String s) -> new LinkedString(s.length() == 2000 ? "" : s).toString());
             printlnColored("toString - char[] constructor", "\033[4m\033[1;35m%s\033[0m");
-            this.check((String s) -> s, (String s) -> new LinkedString(s.toCharArray()).toString());
+            this.check((String s) -> s.length() == 2000 ? "" : s,
+                    (String s) -> new LinkedString(s.length() == 2000 ? new char[0] : s.toCharArray()).toString());
         }
         if (canContinue) {
             if (all || isIn(args, "substring")) {
@@ -408,7 +410,7 @@ public class Main {
     }
 
     private boolean hard_check(Checkable c1, Object o) {
-        int tc_num = 0, temp = -1;
+        int temp = -1;
         try {
             checker = null;
             Thread th = new Thread(new Runnable() {
@@ -451,23 +453,18 @@ public class Main {
             if (ap instanceof Analyzer.MethodPool) {
                 Analyzer.MethodPool amp = (Analyzer.MethodPool) ap;
                 String clStr = a.pool[amp.v].toString(a);
+                String pretty = a.prettyMethod(amp);
+                int notice = 0;
                 if (clStr.equals("Class(java/lang/String)")) {
                     String anatp = a.pool[amp.w].toString(a);
                     String methodName = ((Analyzer.UTFPool) a.pool[((Analyzer.NameAndTypePool) a.pool[amp.w]).v]).v;
-                    if (Arrays
-                            .asList(new String[] { "NameAndType(toCharArray:()[C)",
-                                    "NameAndType(toString:()Ljava/lang/String;)", "NameAndType(charAt:(I)C)", })
+                    if (Arrays.asList(new String[] { "NameAndType(toCharArray:()[C)",
+                            "NameAndType(toString:()Ljava/lang/String;)", "NameAndType(charAt:(I)C)",
+                            "NameAndType(concat:(Ljava/lang/String;)Ljava/lang/String;)", "NameAndType(length:()I)" })
                             .contains(anatp) || Arrays.asList(new String[] { "<init>" }).contains(methodName)) {
-                        System.out.print("Safe and happy little method String::");
-                        printColored(methodName, "\033[1;36m%s\033[0m");
-                        System.out.print(" detected. ");
-                        printlnColored("Good to go.", "\033[5m\033[1;32m%s\033[0m");
+                        notice = 1;
                     } else {
-                        System.out.print("Dangerous and ugly monstrous method ");
-                        printColored(methodName, "\033[1;36m%s\033[0m");
-                        System.out.print(" detected. ");
-                        printlnColored("Cannot continue.", "\033[5m\033[1;31m%s\033[0m");
-                        return false;
+                        notice = 2;
                     }
                 } else if (clStr.equals("Class(java/lang/StringBuilder)")) {
                     String anatp = a.pool[amp.w].toString(a);
@@ -475,17 +472,24 @@ public class Main {
                     if (Arrays.asList(
                             new String[] { "NameAndType(<init>:()V)", "NameAndType(toString:()Ljava/lang/String;)" })
                             .contains(anatp) || Arrays.asList(new String[] { "append" }).contains(methodName)) {
-                        System.out.print("Safe and happy little method StringBuilder::");
-                        printColored(methodName, "\033[1;36m%s\033[0m");
-                        System.out.print(" detected. ");
-                        printlnColored("Good to go.", "\033[5m\033[1;32m%s\033[0m");
+                        notice = 1;
                     } else {
-                        System.out.print("Dangerous and ugly monstrous method ");
-                        printColored(methodName, "\033[1;36m%s\033[0m");
-                        System.out.print(" detected. ");
-                        printlnColored("Cannot continue.", "\033[5m\033[1;31m%s\033[0m");
-                        return false;
+                        notice = 2;
                     }
+                } else if (clStr.equals("Class(java/util/LinkedList)")) {
+                    notice = 2;
+                }
+                if (notice == 1) {
+                    System.out.print("Safe and happy little method ");
+                    printColored(pretty, "\033[1;36m%s\033[0m");
+                    System.out.print(" detected. ");
+                    printlnColored("Good to go.", "\033[5m\033[1;32m%s\033[0m");
+                } else if (notice == 2) {
+                    System.out.print("Dangerous and ugly monstrous method ");
+                    printColored(pretty, "\033[1;36m%s\033[0m");
+                    System.out.print(" detected. ");
+                    printlnColored("Cannot continue.", "\033[5m\033[1;31m%s\033[0m");
+                    return false;
                 }
             }
         }
