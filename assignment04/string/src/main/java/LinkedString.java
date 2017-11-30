@@ -12,10 +12,9 @@ public class LinkedString implements LinkedStringInterface {
         }
 
         public LinkedString take(int length) {
-            int i = 0;
             CharacterNode node = this;
             LinkedString arr = new LinkedString();
-            while (i++ < length) {
+            for (int i = 0; i < length; i++) {
                 if (node == null)
                     throw new IndexOutOfBoundsException();
                 arr.push(node.value);
@@ -25,12 +24,12 @@ public class LinkedString implements LinkedStringInterface {
         }
 
         public CharacterNode after(int index) {
-            int i = 0;
             CharacterNode node = this;
-            while (i++ < index && node != null)
+            for (int i = 0; i < index; i++) {
+                if (node == null)
+                    throw new IndexOutOfBoundsException();
                 node = node.next;
-            if (node == null)
-                throw new IndexOutOfBoundsException();
+            }
             return node;
         }
     }
@@ -53,8 +52,7 @@ public class LinkedString implements LinkedStringInterface {
     public LinkedString(String str) {
         root = null;
         tail = null;
-        char[] arr = str.toCharArray();
-        for (char c : arr)
+        for (char c : str.toCharArray())
             push(c);
     }
 
@@ -92,13 +90,10 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int length() {
-        CharacterNode node = root;
-        int i = 0;
-        while (node != null) {
-            node = node.next;
-            i++;
-        }
-        return i;
+        int length = 0;
+        for (CharacterNode node = root; node != null; node = node.next)
+            length++;
+        return length;
     }
 
     protected static int[] getPi(char[] pattern) {
@@ -124,9 +119,9 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public void remove(String substr) {
-        char[] pattern = substr.toCharArray();
-        if (pattern.length == 0 || isEmpty())
+        if (substr.length() == 0 || isEmpty())
             return;
+        char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
         CharacterNode m_node = new EmptyHeadCharacterNode(root);
         CharacterNode m_plus_i_node = root;
@@ -170,12 +165,9 @@ public class LinkedString implements LinkedStringInterface {
         if (isEmpty())
             return "";
         char[] arr = new char[length()];
-        CharacterNode node = root;
         int i = 0;
-        while (node != null) {
+        for (CharacterNode node = root; node != null; node = node.next)
             arr[i++] = node.value;
-            node = node.next;
-        }
         return new String(arr);
     }
 
@@ -184,9 +176,9 @@ public class LinkedString implements LinkedStringInterface {
             throw new IndexOutOfBoundsException(makeIndexOutExceptionMessage(index));
         CharacterNode node = root;
         while (index-- > 0) {
-            node = node.next;
             if (node == null)
                 throw new IndexOutOfBoundsException(makeIndexOutExceptionMessage(index));
+            node = node.next;
         }
         return node.value;
     }
@@ -201,8 +193,7 @@ public class LinkedString implements LinkedStringInterface {
                 throw new StringIndexOutOfBoundsException(makeSubstringExceptionMessage(startIndex, endIndex));
         }
         CharacterNode node = root;
-        int i = 0;
-        while (i++ < startIndex) {
+        for (int i = 0; i < startIndex; i++) {
             if (node == null)
                 throw new StringIndexOutOfBoundsException(makeSubstringExceptionMessage(startIndex, endIndex));
             node = node.next;
@@ -225,23 +216,21 @@ public class LinkedString implements LinkedStringInterface {
     public int indexOf(char c) {
         if (isEmpty())
             return -1;
-        CharacterNode node = root;
         int cursor = 0;
-        while (node != null && node.value != c) {
-            node = node.next;
+        for (CharacterNode node = root; node != null; node = node.next) {
+            if (node.value == c)
+                return cursor;
             cursor++;
         }
-        if (node != null)
-            return cursor;
         return -1;
     }
 
     public int indexOf(String substr) {
-        char[] pattern = substr.toCharArray();
-        if (pattern.length == 0)
+        if (substr.length() == 0)
             return 0;
         if (isEmpty())
             return -1;
+        char[] pattern = substr.toCharArray();
         int[] pi = getPi(pattern);
         CharacterNode m_node = root, m_plus_i_node = root;
         int m = 0, i = 0;
@@ -276,23 +265,21 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int compareTo(String str) {
-        int my_length = 0;
-        char[] str_array = str.toCharArray();
+        int length = 0;
+        char[] carr = str.toCharArray();
         CharacterNode node = root;
-        for (char c : str_array) {
+        for (char c : carr) {
             if (node == null)
-                return my_length - str_array.length;
+                return length - carr.length;
             int diff = node.value - c;
             if (diff != 0)
                 return diff;
             node = node.next;
-            my_length++;
+            length++;
         }
-        while (node != null) {
-            node = node.next;
-            my_length++;
-        }
-        return my_length - str_array.length;
+        for (; node != null; node = node.next)
+            length++;
+        return length - carr.length;
     }
 
     public int compareToIgnoreCase(LinkedStringInterface str) {
@@ -300,23 +287,21 @@ public class LinkedString implements LinkedStringInterface {
     }
 
     public int compareToIgnoreCase(String str) {
-        int my_length = 0;
-        char[] str_array = str.toCharArray();
+        int length = 0;
+        char[] carr = str.toCharArray();
         CharacterNode node = root;
-        for (char c : str_array) {
+        for (char c : carr) {
             if (node == null)
-                return my_length - str_array.length;
+                return length - carr.length;
             int diff = Character.toLowerCase(node.value) - Character.toLowerCase(c);
             if (diff != 0)
                 return diff;
             node = node.next;
-            my_length++;
+            length++;
         }
-        while (node != null) {
-            node = node.next;
-            my_length++;
-        }
-        return my_length - str_array.length;
+        for (; node != null; node = node.next)
+            length++;
+        return length - carr.length;
     }
 
     public LinkedStringInterface concat(LinkedStringInterface str) {
@@ -333,12 +318,9 @@ public class LinkedString implements LinkedStringInterface {
 
     public LinkedStringInterface replace(char a, char b) {
         LinkedString new_str = new LinkedString(this);
-        CharacterNode node = new_str.root;
-        while (node != null) {
+        for (CharacterNode node = new_str.root; node != null; node = node.next)
             if (node.value == a)
                 node.value = b;
-            node = node.next;
-        }
         return new_str;
     }
 }

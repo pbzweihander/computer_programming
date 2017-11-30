@@ -20,7 +20,7 @@ public class Main {
     public Object checker;
 
     public final long time_limit = 2000000000L;
-    public final long hard_time_limit = 50000000000L;
+    public final long hard_time_limit = 5000000000L;
 
     private interface Checkable {
         public Object run(String s) throws Exception;
