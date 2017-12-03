@@ -2,7 +2,7 @@ public class Assignment4_2 {
     public Node4_1 root;
 
     private class Queue<T> {
-        private class Node {
+        protected class Node {
             public Node next;
             public T value;
 
@@ -11,8 +11,8 @@ public class Assignment4_2 {
             }
         }
 
-        private Node root;
-        private Node tail;
+        protected Node root;
+        protected Node tail;
 
         public Queue() {
             root = null;
@@ -20,13 +20,14 @@ public class Assignment4_2 {
         }
 
         public void push(T element) {
-            if (root == null) {
-                root = new Node(element);
-                tail = root;
-            } else {
-                tail.next = new Node(element);
-                tail = tail.next;
-            }
+            if (element != null)
+                if (root == null) {
+                    root = new Node(element);
+                    tail = root;
+                } else {
+                    tail.next = new Node(element);
+                    tail = tail.next;
+                }
         }
 
         public T pop() {
@@ -44,36 +45,44 @@ public class Assignment4_2 {
         }
     }
 
+    private class StringQueue extends Queue<Character> {
+        public StringQueue(String str) {
+            root = null;
+            tail = null;
+            for (char c : str.toCharArray())
+                push(c);
+        }
+    }
+
     private interface Reporter {
         public void report(Node4_1 node, StringBuilder builder);
     }
 
     public Assignment4_2(String s1, String s2) {
-        root = new Node4_1();
-        makeNode(s1, root);
-        labelNode(s2, root);
+        if (!s1.isEmpty()) {
+            root = new Node4_1();
+            makeNode(new StringQueue(s1), root);
+            labelNode(new StringQueue(s2), root);
+        }
     }
 
-    private String makeNode(String dna, Node4_1 parent) {
-        if (dna.charAt(0) == '1')
-            parent.left = new Node4_1();
-        if (dna.charAt(1) == '1')
-            parent.right = new Node4_1();
-        dna = dna.substring(2);
-        if (parent.left != null)
-            dna = makeNode(dna, parent.left);
-        if (parent.right != null)
-            dna = makeNode(dna, parent.right);
-        return dna;
+    private void makeNode(StringQueue dna, Node4_1 node) {
+        if (dna.pop() == '1')
+            node.left = new Node4_1();
+        if (dna.pop() == '1')
+            node.right = new Node4_1();
+        if (node.left != null)
+            makeNode(dna, node.left);
+        if (node.right != null)
+            makeNode(dna, node.right);
     }
 
-    private void labelNode(String dna, Node4_1 root) {
+    private void labelNode(StringQueue dna, Node4_1 root) {
         Queue<Node4_1> labelling_queue = new Queue<>();
         labelling_queue.push(root);
         while (!labelling_queue.isEmpty()) {
             Node4_1 node = labelling_queue.pop();
-            node.character = dna.charAt(0);
-            dna = dna.substring(1);
+            node.character = dna.pop();
             if (node.left != null)
                 labelling_queue.push(node.left);
             if (node.right != null)
@@ -112,11 +121,13 @@ public class Assignment4_2 {
     }
 
     private void reportPreorder_inner(Node4_1 node, StringBuilder builder, Reporter reporter) {
-        reporter.report(node, builder);
-        if (node.left != null)
-            reportPreorder_inner(node.left, builder, reporter);
-        if (node.right != null)
-            reportPreorder_inner(node.right, builder, reporter);
+        if (node != null) {
+            reporter.report(node, builder);
+            if (node.left != null)
+                reportPreorder_inner(node.left, builder, reporter);
+            if (node.right != null)
+                reportPreorder_inner(node.right, builder, reporter);
+        }
     }
 
     private String reportLevelOrder(Node4_1 root, Reporter reporter) {
@@ -135,11 +146,14 @@ public class Assignment4_2 {
     }
 
     private void reportBits(Node4_1 node, StringBuilder builder) {
-        builder.append(node.left != null ? "1" : "0");
-        builder.append(node.right != null ? "1" : "0");
+        if (node != null) {
+            builder.append(node.left != null ? "1" : "0");
+            builder.append(node.right != null ? "1" : "0");
+        }
     }
 
     private void reportCharacter(Node4_1 node, StringBuilder builder) {
-        builder.append(node.character);
+        if (node != null)
+            builder.append(node.character);
     }
 }
