@@ -6,7 +6,7 @@ TARGET := bin/test
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g
+CFLAGS := -g -Wall
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
