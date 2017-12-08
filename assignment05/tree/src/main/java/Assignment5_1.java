@@ -2,25 +2,28 @@ public class Assignment5_1 {
     public Node5_1 root;
 
     public Assignment5_1(String preorder, String inorder) {
-        if (preorder.isEmpty()) {
+        if (preorder.isEmpty())
             root = null;
-        } else {
-            root = construct(new StringQueue(preorder), new StringQueue(inorder));
-        }
+        else
+            root = construct(new StringQueue(preorder), inorder);
     }
 
-    private Node5_1 construct(StringQueue preorder, StringQueue inorder) {
+    private Node5_1 construct(StringQueue preorder, String inorder) {
         Node5_1 node = new Node5_1();
         node.label = preorder.pop();
-        if (inorder.peek() == node.label)
+        if (inorder.length() <= 1)
             return node;
-        StringQueue[] lists = inorder.split(node.label);
-        node.left = construct(preorder, lists[0]);
-        node.right = construct(preorder, lists[1]);
+        int index = inorder.indexOf(node.label);
+        if (index > 0)
+            node.left = construct(preorder, inorder.substring(0, index));
+        if (index < inorder.length() - 1)
+            node.right = construct(preorder, inorder.substring(index + 1));
         return node;
     }
 
     public String report() {
+        if (root == null)
+            return "";
         StringBuilder builder = new StringBuilder();
         StringBuilder buffer = new StringBuilder();
         Queue<Node5_1> queue = new Queue<>();
@@ -37,19 +40,18 @@ public class Assignment5_1 {
             if (node == delimiter) {
                 if (!queue.isEmpty())
                     queue.push(delimiter);
-                if (reversed)
-                    builder.append(buffer.reverse());
-                else
-                    builder.append(buffer);
+                builder.append(reversed ? buffer.reverse() : buffer);
                 reversed = !reversed;
                 buffer.setLength(0);
             } else {
-                buffer.append(node.left != null ? node.left.label : "");
-                buffer.append(node.right != null ? node.right.label : "");
-                if (node.left != null)
+                if (node.left != null) {
+                    buffer.append(node.left.label);
                     queue.push(node.left);
-                if (node.right != null)
+                }
+                if (node.right != null) {
+                    buffer.append(node.right.label);
                     queue.push(node.right);
+                }
             }
         }
         return builder.toString();
