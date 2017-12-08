@@ -38,3 +38,4 @@ tests/
 build/
 bin/
 *.bin
+header.txt
