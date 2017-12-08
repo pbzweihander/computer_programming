@@ -1,5 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        Assignment5_1 tree = new Assignment5_1("ABDHIEJKCFLMGNO", "HDIBJEKALFMCNGO");
+        System.out.println(tree.report());
     }
 }
