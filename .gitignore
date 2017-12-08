@@ -37,3 +37,4 @@ tests/
 .gradle/
 build/
 bin/
+*.bin
