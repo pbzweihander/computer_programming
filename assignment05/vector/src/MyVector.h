@@ -25,6 +25,16 @@ public:
     double get(int index) const;
 };
 
+MyVector operator+(double num, const MyVector& vec);
+MyVector operator-(double num, const MyVector& vec);
+MyVector operator/(double num, const MyVector& vec);
+MyVector operator*(double num, const MyVector& vec);
+
+MyVector operator+(const MyVector& vec, double num);
+MyVector operator-(const MyVector& vec, double num);
+MyVector operator/(const MyVector& vec, double num);
+MyVector operator*(const MyVector& vec, double num);
+
 void print_error(char op, const MyVector& a, const MyVector& b);
 void print_error(char op, double a, const MyVector& b);
 
