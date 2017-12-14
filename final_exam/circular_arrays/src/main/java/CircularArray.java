@@ -17,18 +17,14 @@ public class CircularArray {
         int length = arr.length;
         int i = 0;
         for (int j = start; j < length + start; j++) {
-            if (arr[i++] != other.get(j % length)) {
+            if (arr[i++] != other.arr[j % length]) {
                 start++;
                 i = 0;
-                j = start;
-                if (start > length)
+                j = start - 1;
+                if (start >= length)
                     return false;
             }
         }
         return true;
-    }
-
-    public int get(int i) {
-        return arr[i];
     }
 }
