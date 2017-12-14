@@ -4,43 +4,37 @@
 
 using namespace std;
 
-class Student {
-private:
+typedef struct {
     char name[129];
     int grade;
-public:
-    Student() {
-        strcpy(name, "");
-        grade = 0;
-    }
+} Student;
 
-    void set(char name[], int grade) {
-        strcpy(this->name, name);
-        this->grade = grade;
-    }
+int compare_with_name(const Student* a, const Student* b) {
+    int s = strcmp(a->name, b->name);
+    if (s == 0)
+        return a->grade - b->grade;
+    return s;
+}
 
-    int compare_with_name(const Student& other) const {
-        for (int i = 0; name[i] != '\0'; i++) {
-            if (other.name[i] == '\0')
-                return strlen(name) - i;
-            else if (other.name[i] != name[i])
-                return name[i] - other.name[i];
-        }
-        return strlen(name) - strlen(other.name);
-    }
+int compare_with_name(const void* a, const void* b) {
+    return compare_with_name((Student*) a, (Student*) b);
+}
 
-    int compare_with_name_reversed(const Student& other) const {
-        return -compare_with_name(other);
-    }
+int compare_with_name_reversed(const void* a, const void* b) {
+    return compare_with_name(b, a);
+}
 
-    int compare_with_grade(const Student& other) const {
-        return grade - other.grade;
-    }
+int compare_with_grade(const Student* a, const Student* b) {
+    return a->grade - b->grade;
+}
 
-    int compare_with_grade_reversed(const Student& other) const {
-        return -compare_with_grade(other);
-    }
-};
+int compare_with_grade(const void* a, const void* b) {
+    return compare_with_grade((Student*) a, (Student*) b);
+}
+
+int compare_with_grade_reversed(const void* a, const void* b) {
+    return compare_with_grade(b, a);
+}
 
 int main(void) {
     char criteria[7];
@@ -55,7 +49,25 @@ int main(void) {
     for (int i = 0; i < n_of_students; i++) {
         char name[129];
         int grade;
-        scanf("%s, %d", name, &grade);
-        students[i].set(name, grade);
+        cin >> name >> grade;
+        name[strlen(name) - 1] = '\0';
+        strcpy(students[i].name, name);
+        students[i].grade = grade;
+    }
+
+    if (strcmp(criteria, "Name") == 0) {
+        if (strcmp(direction, "Increasing") == 0)
+            qsort(students, n_of_students, sizeof(Student), compare_with_name);
+        else if (strcmp(direction, "Decreasing") == 0)
+            qsort(students, n_of_students, sizeof(Student), compare_with_name_reversed);
+    } else if (strcmp(criteria, "Grade") == 0) {
+        if (strcmp(direction, "Increasing") == 0)
+            qsort(students, n_of_students, sizeof(Student), compare_with_grade);
+        else if (strcmp(direction, "Decreasing") == 0)
+            qsort(students, n_of_students, sizeof(Student), compare_with_grade_reversed);
+    }
+
+    for (int i = 0; i < n_of_students; i++) {
+        cout << students[i].name << ", " << students[i].grade << endl;
     }
 }
