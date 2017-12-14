@@ -3,9 +3,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class Main {
+public class final_01 {
     public static void main(String[] args) {
-        Main main = new Main();
+        final_01 main = new final_01();
         main.inner_main(args);
     }
 
