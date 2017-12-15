@@ -1,5 +1,6 @@
 
 #include "MyVector.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -10,10 +11,11 @@ int main(void) {
     MyVector b = MyVector(bd, sizeof(bd) / sizeof(double));
     double c = 3.14;
 
+    cout << setprecision(14);
     cout << a * b << endl;
-    cout << (a + b).to_string() << endl;
-    cout << (a + c).to_string() << endl;
-    cout << (a * c).to_string() << endl;
-    cout << (a / c).to_string() << endl;
-    cout << (a - c).to_string() << endl;
+    (a + b).print();
+    (a + c).print();
+    (a * c).print();
+    (a / c).print();
+    (a - c).print();
 }
