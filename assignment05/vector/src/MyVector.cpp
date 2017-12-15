@@ -5,7 +5,7 @@ void arrcpy(double dest[], const double from[], int size) {
         dest[i] = from[i];
 }
 
-MyVector::MyVector(double numList[], int dimension) {
+MyVector::MyVector(const double numList[], int dimension) {
     this->dimension = dimension;
     numbers = new double[dimension];
     arrcpy(this->numbers, numList, dimension);
@@ -16,19 +16,26 @@ MyVector::MyVector() {
     numbers = new double[0];
 }
 
-string MyVector::to_string() const {
-    if (dimension == 0)
-        return "()";
-    stringstream s;
+void MyVector::to_stream(ostream& s) const {
+    if (dimension == 0) {
+        s << "()";
+        return;
+    }
     s << "(";
     for (int i = 0; i < dimension - 1; i++)
         s << numbers[i] << ", ";
     s << numbers[dimension - 1] << ")";
+}
+
+string MyVector::to_string() const {
+    stringstream s;
+    to_stream(s);
     return s.str();
 }
 
 void MyVector::print() const {
-    cout << to_string() << endl;
+    to_stream(cout);
+    cout << endl;
 }
 
 int MyVector::get_dimension() const {
@@ -46,7 +53,7 @@ MyVector MyVector::operator+(const MyVector& vec) const {
     }
     double* n = new double[dimension];
     for (int i = 0; i < dimension; i++)
-        n[i] = numbers[i] + vec.get(i);
+        n[i] = numbers[i] + vec.numbers[i];
     return MyVector(n, dimension);
 }
 
@@ -57,7 +64,7 @@ MyVector MyVector::operator-(const MyVector& vec) const {
     }
     double* n = new double[dimension];
     for (int i = 0; i < dimension; i++)
-        n[i] = numbers[i] - vec.get(i);
+        n[i] = numbers[i] - vec.numbers[i];
     return MyVector(n, dimension);
 }
 
@@ -68,7 +75,7 @@ double MyVector::operator*(const MyVector& vec) const {
     }
     double d = 0.0;
     for (int i = 0; i < dimension; i++)
-        d += numbers[i] * vec.get(i);
+        d += numbers[i] * vec.numbers[i];
     return d;
 }
 
@@ -124,13 +131,16 @@ MyVector operator/(const MyVector& vec, double num) {
 }
 
 void print_error(char op, const MyVector& a, const MyVector& b) {
-    stringstream s;
-    s << op << " cannot applied to " << a.to_string() << " and " << b.to_string();
-    cout << s.str() << endl;
+    cout << op << " cannot be applied to ";
+    a.to_stream(cout);
+    cout << " and ";
+    b.to_stream(cout);
+    cout << endl;
 }
 
 void print_error(char op, double a, const MyVector& b) {
-    stringstream s;
-    s << op << " cannot applied to " << a << " and " << b.to_string();
-    cout << s.str() << endl;
+    cout << op << " cannot be applied to " << a;
+    cout << " and ";
+    b.to_stream(cout);
+    cout << endl;
 }

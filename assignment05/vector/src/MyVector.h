@@ -12,7 +12,7 @@ private:
    double* numbers;
 
 public:
-    MyVector(double numList[], int dimension);
+    MyVector(const double numList[], int dimension);
     MyVector();
     void print() const;
     MyVector operator+(const MyVector& vec) const;
@@ -20,6 +20,7 @@ public:
     double operator*(const MyVector& vec) const;
     MyVector operator/(const MyVector& vec) const;
 
+    void to_stream(ostream& s) const;
     string to_string() const;
     int get_dimension() const;
     double get(int index) const;
