@@ -37,3 +37,5 @@ tests/
 .gradle/
 build/
 bin/
+*.bin
+header.txt
